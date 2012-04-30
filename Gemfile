@@ -2,4 +2,4 @@ source :rubygems
 
 gemspec
 
-gem 'sinatra', :git => 'git://github.com/sinatra/sinatra'
+gem 'sinatra', '~> 1.3'

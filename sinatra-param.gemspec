@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "sinatra-param"
+require "sinatra/param"
 
 Gem::Specification.new do |s|
   s.name        = "sinatra-param"
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "sinatra-param"
   s.description = "Parameter Contracts for Sinatra"
   
-  s.add_dependency "sinatra",   "~> 1.4.0"
+  s.add_dependency "sinatra",   "~> 1.3"
 
   s.add_development_dependency "rspec", "~> 0.6.1"
   s.add_development_dependency "rake",  "~> 0.9.2"

@@ -1,3 +1,5 @@
+require 'sinatra/base'
+
 module Sinatra
   module Param
     VERSION = "0.0.1"

@@ -65,7 +65,7 @@ Use the `transform` option to take even more of the business logic of parameter 
 
 - Another pain point is the awkward way parameters are passed as JSON in HTTP bodies. I'd love to see an elegant, unobtrusive way to do this automatically.
 
-- Then of course, there's the matter of general Ruby logistics: testing, gemification, etc. This will happen soon. 
+- Testing. This will happen soon. 
 
 ## Contact
 

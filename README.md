@@ -7,6 +7,31 @@ But figuring out what parameters are expected... well, all bets are off. This Si
 
 **`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [DataMapper](http://datamapper.org/) or [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames).**
 
+## Example
+
+``` ruby
+class App < Sinatra::Base
+  helpers Sinatra::Param
+
+  before do
+    content_type :json
+  end
+  
+  # GET /search?q=example
+  # GET /search?q=example&categories=news
+  # GET /search?q=example&sort=created_at&order=ASC
+  get '/search' do
+    param :q,           String, required: true
+    param :categories,  Array
+    param :sort,        String, default: "title"
+    param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
+    
+    {...}.to_json
+  end
+end
+```
+
+
 ### Parameter Types
 
 By declaring parameter types, incoming parameters will automatically be transformed into an object of that type. For instance, if a param is `Boolean`, values of `'1'`, `'true'`, `'t'`, `'yes'`, and `'y'` will be automatically transformed into `true`.
@@ -33,30 +58,6 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 Passing a `default` option will provide a default value for a parameter if none is passed.
 
 Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including Procs and symbols) will do.
-
-## Example
-
-``` ruby
-class App < Sinatra::Base
-  helpers Sinatra::Param
-
-  before do
-    content_type :json
-  end
-  
-  # GET /search?q=example
-  # GET /search?q=example&categories=news
-  # GET /search?q=example&sort=created_at&order=ASC
-  get '/search' do
-    param :q,           String, required: true
-    param :categories,  Array
-    param :sort,        String, default: "title"
-    param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
-    
-    {...}.to_json
-  end
-end
-```
 
 ## Next Steps
 

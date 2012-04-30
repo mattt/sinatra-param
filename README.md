@@ -1,5 +1,5 @@
 # sinatra-param
-_Parameter Validation and Typecasting for Sinatra_
+_Parameter Contracts for Sinatra_
 
 REST conventions takes the guesswork out of designing and consuming web APIs. `GET` / `POST` / `PATCH` / `DELETE` resource endpoints and you get what you'd expect.
 
@@ -36,12 +36,12 @@ end
 
 By declaring parameter types, incoming parameters will automatically be transformed into an object of that type. For instance, if a param is `Boolean`, values of `'1'`, `'true'`, `'t'`, `'yes'`, and `'y'` will be automatically transformed into `true`.
 
-- String
-- Integer
-- Float
-- Boolean _("1/0", "true/false", "t/f", "yes/no", "y/n")_
-- Array _("1,2,3,4,5")_
-- Hash _(key1:value1,key2:value2)_
+- `String`
+- `Integer`
+- `Float`
+- `Boolean` _("1/0", "true/false", "t/f", "yes/no", "y/n")_
+- `Array` _("1,2,3,4,5")_
+- `Hash` _(key1:value1,key2:value2)_
 
 ### Validations
 

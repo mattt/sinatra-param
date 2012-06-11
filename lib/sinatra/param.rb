@@ -1,4 +1,6 @@
 require 'sinatra/base'
+require 'time'
+require 'date'
 
 module Sinatra
   module Param
@@ -28,6 +30,9 @@ module Sinatra
         return Integer(param) if type == Integer
         return Float(param) if type == Float
         return String(param) if type == String
+        return Time.parse(param) if type == Time
+        return Date.parse(param) if type == Date
+        return DateTime.parse(param) if type == DateTime
         return Array(param.split(options[:delimiter] || ",")) if type == Array
         return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
         return ((/(false|f|no|n|0)$/i === param) ? false : (/(true|t|yes|y|1)$/i === param) ? true : nil) if type == Boolean

@@ -1,7 +1,7 @@
 require 'sinatra/base'
 require 'json'
 
-require '../lib/sinatra/param'
+require_relative '../sinatra/param'
 
 class App < Sinatra::Base
   helpers Sinatra::Param
@@ -37,6 +37,17 @@ class App < Sinatra::Base
     
     {
       message: params[:message]
+    }.to_json
+  end
+
+  get '/exclude' do
+    param :a, String
+    param :b, String
+    param :c, String
+    param_mutex(:a, :b)
+    param_mutex(:b, :c)
+    {
+      message: 'OK'
     }.to_json
   end
 end

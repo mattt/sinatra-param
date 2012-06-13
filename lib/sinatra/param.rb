@@ -13,7 +13,7 @@ module Sinatra
         validate!(params[name], options)
       rescue
         error = "Invalid parameter, #{name}"
-        if content_type.match(mime_type(:json))
+        if content_type && content_type.match(mime_type(:json))
           error = {message: error}.to_json
         end
 

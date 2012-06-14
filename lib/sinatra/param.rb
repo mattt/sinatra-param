@@ -62,13 +62,13 @@ module Sinatra
                   Array(value).include?(param)
                 end
           when :min
-            raise InvalidParameterError unless value <= param
+            raise InvalidParameterError unless param.nil? || value <= param
           when :max
-            raise InvalidParameterError unless value >= param
+            raise InvalidParameterError unless param.nil? || value >= param
           when :min_length
-            raise InvalidParameterError unless value <= param.length
+            raise InvalidParameterError unless param.nil? || value <= param.length
           when :max_length
-            raise InvalidParameterError unless value >= param.length
+            raise InvalidParameterError unless param.nil? || value >= param.length
         end
       end
     end

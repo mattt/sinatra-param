@@ -51,16 +51,16 @@ module Sinatra
             when :is
               raise InvalidParameterError unless value === param
             when :in, :within, :range
-              raise InvalidParameterError unless case value
+              raise InvalidParameterError unless param.nil? || case value
                   when Range
                     value.include?(param)
                   else
                     Array(value).include?(param)
                   end
             when :min
-              raise InvalidParameterError unless value <= param
+              raise InvalidParameterError unless param.nil? || value <= param
             when :max
-              raise InvalidParameterError unless value >= param
+              raise InvalidParameterError unless param.nil? || value >= param
           end
         end
       end

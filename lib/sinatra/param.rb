@@ -22,7 +22,7 @@ module Sinatra
       end
     end
 
-    def param_mutex(*names)
+    def one_of(*names)
       found = 0
       names.each do |name|
         found += 1 if params[name] && present?(params[name])

@@ -32,8 +32,23 @@ module Sinatra
       return Time.parse(param) if type == Time
       return Date.parse(param) if type == Date
       return DateTime.parse(param) if type == DateTime
-      return Array(param.split(options[:delimiter] || ",")) if type == Array
-      return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
+
+      if type == Array
+        if param.is_a?(Array)
+          return param
+        else
+          return Array(param.split(options[:delimiter] || ","))
+        end
+      end
+
+      if type == Hash
+        if param.is_a?(Hash)
+          return param
+        else
+          return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}]
+        end
+      end
+
       return ((param == false || /(false|f|no|n|0)$/i === param) ? false : (param == true || /(true|t|yes|y|1)$/i === param) ? true : nil) if type == TrueClass || type == FalseClass || type == :boolean
       return nil
     end

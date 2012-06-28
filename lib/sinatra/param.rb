@@ -76,7 +76,7 @@ module Sinatra
       # If the param is an Enumerable (including Array), validate each member
       case param
       when Enumerable
-        param.each { |entry| proc.call(entry) }
+        param.all? { |entry| proc.call(entry) }
       else
         proc.call(param)
       end

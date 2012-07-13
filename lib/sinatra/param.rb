@@ -1,11 +1,10 @@
 require 'sinatra/base'
+require 'sinatra/param/version'
 require 'time'
 require 'date'
 
 module Sinatra
   module Param
-    VERSION = "0.0.2"
-
     class InvalidParameterError < StandardError; end
 
     def param(name, type, options = {})

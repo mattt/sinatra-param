@@ -34,7 +34,7 @@ module Sinatra
       return DateTime.parse(param) if type == DateTime
       return Array(param.split(options[:delimiter] || ",")) if type == Array
       return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
-      return ((/(false|f|no|n|0)$/i === param) ? false : (/(true|t|yes|y|1)$/i === param) ? true : nil) if type == TrueClass || type == FalseClass || type == :boolean
+      return ((param == false || /(false|f|no|n|0)$/i === param) ? false : (param == true || /(true|t|yes|y|1)$/i === param) ? true : nil) if type == TrueClass || type == FalseClass || type == :boolean
       return nil
     end
 

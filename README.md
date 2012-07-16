@@ -10,6 +10,7 @@ But figuring out what parameters are expected... well, all bets are off. This Si
 ## Example
 
 ``` ruby
+require 'sinatra/param'
 class App < Sinatra::Base
   helpers Sinatra::Param
 

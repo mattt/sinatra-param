@@ -40,6 +40,7 @@ module Sinatra
 
     def coerce(param, type, options = {})
       return nil if param.nil?
+      return param if param.is_a?(type)
       return Integer(param) if type == Integer
       return Float(param) if type == Float
       return String(param) if type == String

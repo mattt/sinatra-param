@@ -65,6 +65,10 @@ module Sinatra
             raise InvalidParameterError unless param.nil? || value <= param
           when :max
             raise InvalidParameterError unless param.nil? || value >= param
+          when :min_length
+            raise InvalidParameterError unless param.nil? || value <= param.length
+          when :max_length
+            raise InvalidParameterError unless param.nil? || value >= param.length
         end
       end
     end

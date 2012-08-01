@@ -55,17 +55,30 @@ module Sinatra
           when :is
             raise InvalidParameterError unless value === param
           when :in, :within, :range
-            raise InvalidParameterError unless param.nil? || case value
-                when Range
-                  value.include?(param)
-                else
-                  Array(value).include?(param)
-                end
+            raise InvalidParameterError unless param.nil? || validate_in(param, value)
           when :min
             raise InvalidParameterError unless param.nil? || value <= param
           when :max
             raise InvalidParameterError unless param.nil? || value >= param
         end
+      end
+    end
+
+    def validate_in(param, value)
+      proc = nil
+      case value
+      when Range
+        proc = lambda { |entry| value.include?(entry) }
+      else
+        proc = lambda { |entry| Array(value).include?(entry) }
+      end
+
+      # If the param is an Enumerable (including Array), validate each member
+      case param
+      when Enumerable
+        param.all? { |entry| proc.call(entry) }
+      else
+        proc.call(param)
       end
     end
   end

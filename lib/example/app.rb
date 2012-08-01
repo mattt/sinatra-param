@@ -44,8 +44,9 @@ class App < Sinatra::Base
     param :a, String
     param :b, String
     param :c, String
-    param_mutex(:a, :b)
-    param_mutex(:b, :c)
+
+    one_of(:a, :b, :c)
+    
     {
       message: 'OK'
     }.to_json

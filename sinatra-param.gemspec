@@ -14,7 +14,8 @@ Gem::Specification.new do |s|
   
   s.add_dependency "sinatra",   "~> 1.3"
 
-  s.add_development_dependency "rspec", "~> 0.6.1"
+  s.add_development_dependency "rspec", "~> 2.10"
+  s.add_development_dependency "rack-test"
   s.add_development_dependency "rake",  "~> 0.9.2"
 
   s.files         = Dir["./**/*"].reject { |file| file =~ /\.\/(bin|log|pkg|script|spec|test|vendor)/ }

@@ -40,13 +40,16 @@ class App < Sinatra::Base
     }.to_json
   end
 
-  get '/exclude' do
+  # GET /choice?a=foo
+  # GET /choice?b=bar
+  # GET /choice?c=baz
+  get '/choice' do
     param :a, String
     param :b, String
     param :c, String
 
     one_of(:a, :b, :c)
-    
+
     {
       message: 'OK'
     }.to_json

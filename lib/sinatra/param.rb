@@ -12,6 +12,7 @@ module Sinatra
         params[name] = coerce(params[name], type, options) || options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
+        params[name] = options[:after_validate].to_proc.call(params[name]) if options[:after_validate]
       rescue
         error = "Invalid parameter, #{name}"
         if content_type && content_type.match(mime_type(:json))

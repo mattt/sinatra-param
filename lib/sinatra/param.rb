@@ -22,6 +22,20 @@ module Sinatra
       end
     end
 
+    def one_of(*names)
+      found = 0
+      names.each do |name|
+        found += 1 if params[name] && present?(params[name])
+        if found > 1
+          error = "Parameters #{names.join(', ')} are mutually exclusive"
+          if content_type.match(mime_type(:json))
+            error = {message: error}.to_json
+          end
+          halt 406, error
+        end
+      end
+    end
+
     private
 
     def coerce(param, type, options = {})
@@ -41,8 +55,8 @@ module Sinatra
     def validate!(param, options)
       options.each do |key, value|
         case key
-          when :required
-            raise InvalidParameterError if value && param.nil?
+        when :required
+          raise InvalidParameterError if value && param.nil?
           when :blank
             raise InvalidParameterError if !value && case param
                 when String
@@ -72,7 +86,15 @@ module Sinatra
         end
       end
     end
+      
+    # ActiveSupport #present? and #blank? without patching Object
+    def present?(object)
+      !blank?(object)
+    end
+    
+    def blank?(object)
+      object.respond_to?(:empty?) ? object.empty? : !object
+    end
   end
-
   helpers Param
 end

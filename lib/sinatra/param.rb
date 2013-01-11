@@ -14,7 +14,7 @@ module Sinatra
         validate!(params[name], options)
       rescue
         error = "Invalid parameter, #{name}"
-        if content_type && content_type.match(mime_type(:json))
+        if content_type and content_type.match(mime_type(:json))
           error = {message: error}.to_json
         end
 
@@ -23,14 +23,13 @@ module Sinatra
     end
 
     def one_of(*names)
-      found = 0
       names.each do |name|
-        found += 1 if params[name] && present?(params[name])
-        if found > 1
+        if params[name] and present?(params[name])
           error = "Parameters #{names.join(', ')} are mutually exclusive"
-          if content_type.match(mime_type(:json))
+          if content_type and content_type.match(mime_type(:json))
             error = {message: error}.to_json
           end
+
           halt 406, error
         end
       end
@@ -97,5 +96,6 @@ module Sinatra
       object.respond_to?(:empty?) ? object.empty? : !object
     end
   end
+  
   helpers Param
 end

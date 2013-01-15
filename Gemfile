@@ -1,5 +1,7 @@
 source :rubygems
 
+gem 'sinatra', '~> 1.3'
+
 group :test do
   gem "rspec", "~> 2.10"
   gem "rack-test"
@@ -8,4 +10,4 @@ end
 
 gemspec
 
-gem 'sinatra', '~> 1.3'
+

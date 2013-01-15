@@ -7,4 +7,6 @@ unless ENV['CI']
 end
 
 require 'sinatra/param'
+require 'rack/test'
+
 require 'example/app'

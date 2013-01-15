@@ -23,8 +23,12 @@ module Sinatra
     end
 
     def one_of(*names)
+      count = 0
       names.each do |name|
         if params[name] and present?(params[name])
+          count += 1
+          next unless count > 1
+
           error = "Parameters #{names.join(', ')} are mutually exclusive"
           if content_type and content_type.match(mime_type(:json))
             error = {message: error}.to_json
@@ -86,16 +90,16 @@ module Sinatra
         end
       end
     end
-      
+
     # ActiveSupport #present? and #blank? without patching Object
     def present?(object)
       !blank?(object)
     end
-    
+
     def blank?(object)
       object.respond_to?(:empty?) ? object.empty? : !object
     end
   end
-  
+
   helpers Param
 end

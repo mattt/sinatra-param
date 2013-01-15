@@ -12,7 +12,7 @@ describe 'parameter exclusion' do
       {a: 1, b: 2, c: 3}
     ]
     params.each do |param|
-      get('/exclude', param) do |response|
+      get('/choice', param) do |response|
         response.status.should == 406
         JSON.parse(response.body)['message'].should =~ /mutually exclusive/
       end
@@ -23,11 +23,10 @@ describe 'parameter exclusion' do
     params = [
       {a: 1},
       {b: 2},
-      {c: 3},
-      {a: 1, c: 3},
+      {c: 3}
     ]
     params.each do |param|
-      get('/exclude', param) do |response|
+      get('/choice', param) do |response|
         response.status.should == 200
         JSON.parse(response.body)['message'].should =~ /OK/
       end

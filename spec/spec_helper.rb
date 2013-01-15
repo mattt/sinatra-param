@@ -11,6 +11,6 @@ require 'sinatra/param'
 require 'rspec'
 require 'rack/test'
 
-require 'example/app'
+require 'dummy/app'
 
 include Rack::Test::Methods

@@ -1,8 +1,6 @@
 require 'spec_helper'
-require 'rack/test'
 
 describe 'parameter exclusion' do
-  include Rack::Test::Methods
   def app; App; end
 
   it 'returns 406 on requests that contain more than one mutually exclusive parameter' do

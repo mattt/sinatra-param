@@ -7,6 +7,10 @@ unless ENV['CI']
 end
 
 require 'sinatra/param'
+
+require 'rspec'
 require 'rack/test'
 
 require 'example/app'
+
+include Rack::Test::Methods

@@ -13,4 +13,8 @@ require 'rack/test'
 
 require 'dummy/app'
 
+def app
+  App
+end
+
 include Rack::Test::Methods

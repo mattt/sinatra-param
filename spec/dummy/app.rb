@@ -8,6 +8,18 @@ class App < Sinatra::Base
     content_type :json
   end
 
+  get '/default' do
+    param :sort,        String, default: "title"
+
+    params.to_json
+  end
+
+  get '/transform' do
+    param :order,       String, transform: :upcase
+
+    params.to_json
+  end
+
   # GET /messages
   # GET /messages?sort=name&order=ASC
   get '/messages' do

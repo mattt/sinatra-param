@@ -67,36 +67,73 @@ class App < Sinatra::Base
     params.to_json
   end
 
-  # GET /messages
-  # GET /messages?sort=name&order=ASC
-  get '/messages' do
-    param :sort,  String, default: "name"
-    param :order, String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
-
-    {
-      sort: params[:sort],
-      order: params[:order]
-    }.to_json
+  # validations
+  get '/validation/required' do
+    param :arg, String, required: true
+    params.to_json
   end
 
-  # GET /messages/1,2,3,4,5
-  get '/messages/:ids' do
-    param :ids, Array, required: true
-
-    {
-      ids: params[:ids]
-    }.to_json
+  get '/validation/blank/string' do
+    param :arg, String, blank: false
   end
 
-  # POST /messages/1/response
-  post '/messages/:id/response' do
-    param :message, String, max: 1024, required: true
-
-    {
-      message: params[:message]
-    }.to_json
+  get '/validation/blank/array' do
+    param :arg, Array, blank: false
   end
 
+  get '/validation/blank/hash' do
+    param :arg, Hash, blank: false
+  end
+
+  get '/validation/blank/other' do
+    param :arg, Class, blank: false
+  end
+
+  get '/validation/nonblank/string' do
+    param :arg, String, blank: true
+  end
+
+  get '/validation/is' do
+    param :arg, String, is: 'foo'
+    params.to_json
+  end
+
+  get '/validation/in' do
+    param :arg, String, in: ['ASC', 'DESC']
+    params.to_json
+  end
+
+  get '/validation/within' do
+    param :arg, Integer, within: 1..10
+    params.to_json
+  end
+
+  get '/validation/range' do
+    param :arg, Integer, range: 1..10
+    params.to_json
+  end
+
+  get '/validation/min' do
+    param :arg, Integer, min: 12
+    params.to_json
+  end
+
+  get '/validation/max' do
+    param :arg, Integer, max: 20
+    params.to_json
+  end
+
+  get '/validation/min_length' do
+    param :arg, String, min_length: 5
+    params.to_json
+  end
+
+  get '/validation/max_length' do
+    param :arg, String, max_length: 10
+    params.to_json
+  end
+
+  # sets
   # GET /choice?a=foo
   # GET /choice?b=bar
   # GET /choice?c=baz

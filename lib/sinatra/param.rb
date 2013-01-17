@@ -61,32 +61,32 @@ module Sinatra
         case key
         when :required
           raise InvalidParameterError if value && param.nil?
-          when :blank
-            raise InvalidParameterError if !value && case param
-                when String
-                  !(/\S/ === param)
-                when Array, Hash
-                  param.empty?
-                else
-                  param.nil?
+        when :blank
+          raise InvalidParameterError if !value && case param
+              when String
+                !(/\S/ === param)
+              when Array, Hash
+                param.empty?
+              else
+                param.nil?
+            end
+        when :is
+          raise InvalidParameterError unless value === param
+        when :in, :within, :range
+          raise InvalidParameterError unless param.nil? || case value
+              when Range
+                value.include?(param)
+              else
+                Array(value).include?(param)
               end
-          when :is
-            raise InvalidParameterError unless value === param
-          when :in, :within, :range
-            raise InvalidParameterError unless param.nil? || case value
-                when Range
-                  value.include?(param)
-                else
-                  Array(value).include?(param)
-                end
-          when :min
-            raise InvalidParameterError unless param.nil? || value <= param
-          when :max
-            raise InvalidParameterError unless param.nil? || value >= param
-          when :min_length
-            raise InvalidParameterError unless param.nil? || value <= param.length
-          when :max_length
-            raise InvalidParameterError unless param.nil? || value >= param.length
+        when :min
+          raise InvalidParameterError unless param.nil? || value <= param
+        when :max
+          raise InvalidParameterError unless param.nil? || value >= param
+        when :min_length
+          raise InvalidParameterError unless param.nil? || value <= param.length
+        when :max_length
+          raise InvalidParameterError unless param.nil? || value >= param.length
         end
       end
     end

@@ -17,7 +17,7 @@ class App < Sinatra::Base
   before do
     content_type :json
   end
-  
+
   # GET /search?q=example
   # GET /search?q=example&categories=news
   # GET /search?q=example&sort=created_at&order=ASC
@@ -26,7 +26,7 @@ class App < Sinatra::Base
     param :categories,  Array
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
-    
+
     {...}.to_json
   end
 end
@@ -67,8 +67,6 @@ Use the `transform` option to take even more of the business logic of parameter 
 - Another pain point is the awkward way parameters are passed as JSON in HTTP bodies. I'd love to see an elegant, unobtrusive way to do this automatically.
 
 - Support for Rails-style Arrays (`'key[]=value1&key[]=value2'`) and Hashes (`'key[a]=value1&key[b]=value2`). /via [@manton](https://twitter.com/#!/manton)
-
-- Testing. This will happen soon. 
 
 ## Contact
 

@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "sinatra/param/version"
+require File.expand_path('../lib/sinatra/param/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "sinatra-param"
@@ -11,12 +10,10 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.summary     = "sinatra-param"
   s.description = "Parameter Contracts for Sinatra"
-  
+
   s.add_dependency "sinatra",   "~> 1.3"
 
-  s.add_development_dependency "rspec", "~> 2.10"
-  s.add_development_dependency "rack-test"
-  s.add_development_dependency "rake",  "~> 0.9.2"
+  s.add_development_dependency 'simplecov'
 
   s.files         = Dir["./**/*"].reject { |file| file =~ /\.\/(bin|log|pkg|script|spec|test|vendor)/ }
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

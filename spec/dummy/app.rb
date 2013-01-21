@@ -9,7 +9,6 @@ class App < Sinatra::Base
     content_type :json
   end
 
-  # coercion
   get '/coerce/string' do
     params[:arg] = params[:arg].to_i
     param :arg, String
@@ -58,12 +57,12 @@ class App < Sinatra::Base
 
   # transformations
   get '/default' do
-    param :sort,        String, default: "title"
+    param :sort, String, default: "title"
     params.to_json
   end
 
   get '/transform' do
-    param :order,       String, transform: :upcase
+    param :order, String, transform: :upcase
     params.to_json
   end
 
@@ -133,10 +132,6 @@ class App < Sinatra::Base
     params.to_json
   end
 
-  # sets
-  # GET /choice?a=foo
-  # GET /choice?b=bar
-  # GET /choice?c=baz
   get '/choice' do
     param :a, String
     param :b, String

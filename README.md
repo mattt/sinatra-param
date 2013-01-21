@@ -5,7 +5,7 @@ REST conventions takes the guesswork out of designing and consuming web APIs. `G
 
 But figuring out what parameters are expected... well, all bets are off. This Sinatra extension takes a first step to solving this problem on the developer side
 
-**`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [DataMapper](http://datamapper.org/) or [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames).**
+**`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames) or [DataMapper](http://datamapper.org/).**
 
 ## Example
 
@@ -31,7 +31,6 @@ class App < Sinatra::Base
   end
 end
 ```
-
 
 ### Parameter Types
 
@@ -63,8 +62,6 @@ Use the `transform` option to take even more of the business logic of parameter 
 ## Next Steps
 
 - [Design by contract](http://en.wikipedia.org/wiki/Design_by_contract) like this is great for developers, and with a little meta-programming, it could probably be exposed to users as well. The self-documenting dream of [Hypermedia folks](http://twitter.com/#!/steveklabnik) could well be within reach.
-
-- Another pain point is the awkward way parameters are passed as JSON in HTTP bodies. I'd love to see an elegant, unobtrusive way to do this automatically.
 
 - Support for Rails-style Arrays (`'key[]=value1&key[]=value2'`) and Hashes (`'key[a]=value1&key[b]=value2`). /via [@manton](https://twitter.com/#!/manton)
 

@@ -29,5 +29,11 @@ describe 'Parameter Sets' do
         end
       end
     end
+
+    it 'permits a custom error code' do
+      get '/choice/error_code', a: 1, b: 2 do |response|
+        response.status.should eq(400)
+      end
+    end
   end
 end

@@ -132,6 +132,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/error_code' do
+    param :arg, String, required: true, error: 400
+    params.to_json
+  end
+
   get '/choice' do
     param :a, String
     param :b, String
@@ -142,5 +147,9 @@ class App < Sinatra::Base
     {
       message: 'OK'
     }.to_json
+  end
+
+  get '/choice/error_code' do
+    one_of(:a, :b, :c, error: 400)
   end
 end

@@ -171,4 +171,13 @@ describe 'Parameter Validations' do
       end
     end
   end
+
+  describe 'custom error code' do
+    it 'returns a 400 on requests that define an error code' do
+      get('/validation/error_code') do |response|
+        response.status.should eq(400)
+        JSON.parse(response.body)['message'].should eq('Invalid parameter, arg')
+      end
+    end
+  end
 end

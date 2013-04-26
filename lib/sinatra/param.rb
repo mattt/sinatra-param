@@ -7,6 +7,8 @@ module Sinatra
   module Param
     class InvalidParameterError < StandardError; end
 
+    DEFAULT_ERROR_CODE = 406
+
     def param(name, type, options = {})
       begin
         params[name] = coerce(params[name], type, options) || options[:default]
@@ -18,11 +20,13 @@ module Sinatra
           error = {message: error}.to_json
         end
 
-        halt 406, error
+        halt (options[:error] || DEFAULT_ERROR_CODE), error
       end
     end
 
     def one_of(*names)
+      options = names.last.is_a?(::Hash) ? names.pop : {}
+
       count = 0
       names.each do |name|
         if params[name] and present?(params[name])
@@ -34,7 +38,7 @@ module Sinatra
             error = {message: error}.to_json
           end
 
-          halt 406, error
+          halt (options[:error] || DEFAULT_ERROR_CODE), error
         end
       end
     end

@@ -59,6 +59,14 @@ Passing a `default` option will provide a default value for a parameter if none 
 
 Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including Procs and symbols) will do.
 
+### Custom Error Codes
+
+By default, responses will return a `406` when a validation error occurs. You can opt to respond with a different error by passing an `error` option:
+
+```ruby
+param :sort, String, error: 400
+```
+
 ## Next Steps
 
 - [Design by contract](http://en.wikipedia.org/wiki/Design_by_contract) like this is great for developers, and with a little meta-programming, it could probably be exposed to users as well. The self-documenting dream of [Hypermedia folks](http://twitter.com/#!/steveklabnik) could well be within reach.

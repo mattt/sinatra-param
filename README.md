@@ -45,7 +45,7 @@ By declaring parameter types, incoming parameters will automatically be transfor
 
 ### Validations
 
-Encapsulate business logic in a consistent way with validations. If a parameter does not satisfy a particular condition, a `406` error is returned with a message explaining the failure.
+Encapsulate business logic in a consistent way with validations. If a parameter does not satisfy a particular condition, a `400` error is returned with a message explaining the failure.
 
 - `required`
 - `blank`

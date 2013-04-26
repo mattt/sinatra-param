@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'Parameter Sets' do
   describe 'one_of' do
-    it 'returns 406 on requests that contain more than one mutually exclusive parameter' do
+    it 'returns 400 on requests that contain more than one mutually exclusive parameter' do
       params = [
         {a: 1, b: 2},
         {b: 2, c: 3},
@@ -10,7 +10,7 @@ describe 'Parameter Sets' do
       ]
       params.each do |param|
         get('/choice', param) do |response|
-          response.status.should == 406
+          response.status.should == 400
           JSON.parse(response.body)['message'].should =~ /mutually exclusive/
         end
       end

@@ -18,7 +18,7 @@ module Sinatra
           error = {message: error}.to_json
         end
 
-        halt 406, error
+        halt 400, error
       end
     end
 
@@ -34,7 +34,7 @@ module Sinatra
             error = {message: error}.to_json
           end
 
-          halt 406, error
+          halt 400, error
         end
       end
     end

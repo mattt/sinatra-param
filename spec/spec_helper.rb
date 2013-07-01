@@ -18,4 +18,6 @@ def app
   App
 end
 
-include Rack::Test::Methods
+RSpec.configure do |c|
+  c.include(Rack::Test::Methods)
+end

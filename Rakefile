@@ -1,10 +1,5 @@
-require "bundler"
-Bundler.setup
+require "bundler/gem_tasks"
+require 'rspec/core/rake_task'
 
-gemspec = eval(File.read("sinatra-param.gemspec"))
-
-task :build => "#{gemspec.full_name}.gem"
-
-file "#{gemspec.full_name}.gem" => gemspec.files + ["sinatra-param.gemspec"] do
-  system "gem build sinatra-param.gemspec"
+RSpec::Core::RakeTask.new('spec') do |t|
 end

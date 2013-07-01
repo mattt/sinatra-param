@@ -171,4 +171,19 @@ describe 'Parameter Validations' do
       end
     end
   end
+
+  describe 'validator' do
+    it "returns 400 on requests that don't match the validator's criteria" do
+      get('/validation/validator', arg: 'dummy') do | response|
+        response.status.should eq(400)
+        JSON.parse(response.body)['message'].should eq('Invalid parameter, arg')
+      end
+    end
+
+    it "returns 200 on a request that matches the validator's criteria" do
+      get('/validation/validator', arg: 'dummy request') do | response|
+        response.status.should eq(200)
+      end
+    end
+  end
 end

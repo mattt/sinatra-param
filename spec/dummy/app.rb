@@ -5,6 +5,13 @@ require 'time'
 class App < Sinatra::Base
   helpers Sinatra::Param
 
+  helpers do
+    # Return true if the parameter is two words (space delimited)
+    def two_words(parameter)
+      (parameter.split(' ').size == 2)
+    end
+  end
+
   before do
     content_type :json
   end
@@ -129,6 +136,11 @@ class App < Sinatra::Base
 
   get '/validation/max_length' do
     param :arg, String, max_length: 10
+    params.to_json
+  end
+
+  get '/validation/validator' do
+    param :arg, String, validator: :two_words
     params.to_json
   end
 

@@ -8,6 +8,7 @@ end
 
 require 'sinatra/param'
 
+require 'debugger'
 require 'rspec'
 require 'rack/test'
 
@@ -17,4 +18,8 @@ def app
   App
 end
 
-include Rack::Test::Methods
+RSpec.configure do |c|
+  c.include(Rack::Test::Methods)
+end
+
+ENV['TZ'] = 'UTC'

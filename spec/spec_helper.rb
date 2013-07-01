@@ -8,6 +8,7 @@ end
 
 require 'sinatra/param'
 
+require 'debugger'
 require 'rspec'
 require 'rack/test'
 

@@ -21,3 +21,5 @@ end
 RSpec.configure do |c|
   c.include(Rack::Test::Methods)
 end
+
+ENV['TZ'] = 'UTC'

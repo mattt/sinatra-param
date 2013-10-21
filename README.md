@@ -1,9 +1,11 @@
 # sinatra-param
 _Parameter Contracts for Sinatra_
 
-REST conventions takes the guesswork out of designing and consuming web APIs. `GET` / `POST` / `PATCH` / `DELETE` resource endpoints and you get what you'd expect.
+REST conventions take the guesswork out of designing and consuming web APIs. Simply `GET`, `POST`, `PATCH`, or `DELETE` resource endpoints, and you get what you'd expect.
 
-But figuring out what parameters are expected... well, all bets are off. This Sinatra extension takes a first step to solving this problem on the developer side
+However, when it comes to figuring out what parameters are expected... well, all bets are off. 
+
+This Sinatra extension takes a first step to solving this problem on the developer side
 
 **`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames) or [DataMapper](http://datamapper.org/).**
 

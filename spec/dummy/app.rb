@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'sinatra/param'
 require 'json'
 require 'time'
 

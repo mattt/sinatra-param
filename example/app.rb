@@ -1,8 +1,3 @@
-require 'sinatra/base'
-require 'json'
-
-require_relative '../lib/sinatra/param'
-
 class App < Sinatra::Base
   helpers Sinatra::Param
 
@@ -55,4 +50,3 @@ class App < Sinatra::Base
     }.to_json
   end
 end
-

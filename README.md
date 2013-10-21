@@ -7,10 +7,15 @@ But figuring out what parameters are expected... well, all bets are off. This Si
 
 **`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames) or [DataMapper](http://datamapper.org/).**
 
+> Use `sinatra-param` in combination with [`Rack::PostBodyContentTypeParser` and `Rack::NestedParams`](https://github.com/rack/rack-contrib) to automatically parameterize JSON `POST` bodies and nested parameters.
+
 ## Example
 
 ``` ruby
+require 'sinatra/base'
 require 'sinatra/param'
+require 'json'
+
 class App < Sinatra::Base
   helpers Sinatra::Param
 
@@ -58,12 +63,6 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 Passing a `default` option will provide a default value for a parameter if none is passed.
 
 Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including Procs and symbols) will do.
-
-## Next Steps
-
-- [Design by contract](http://en.wikipedia.org/wiki/Design_by_contract) like this is great for developers, and with a little meta-programming, it could probably be exposed to users as well. The self-documenting dream of [Hypermedia folks](http://twitter.com/#!/steveklabnik) could well be within reach.
-
-- Support for Rails-style Arrays (`'key[]=value1&key[]=value2'`) and Hashes (`'key[a]=value1&key[b]=value2`). /via [@manton](https://twitter.com/#!/manton)
 
 ## Contact
 

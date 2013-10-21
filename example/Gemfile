@@ -2,6 +2,6 @@ ruby '2.0.0'
 source "https://rubygems.org"
 
 gem 'sinatra', require: 'sinatra/base'
-gem 'sinatra-param', path: File.join(__FILE__, "../..")
+gem 'sinatra-param', path: File.join(__FILE__, "../.."), require: 'sinatra/param'
 gem 'json'
 gem 'unicorn'

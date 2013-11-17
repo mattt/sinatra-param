@@ -3,6 +3,7 @@ require File.expand_path('../lib/sinatra/param/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "sinatra-param"
+  s.license     = "MIT"
   s.authors     = ["Mattt Thompson"]
   s.email       = "m@mattt.me"
   s.homepage    = "https://github.com/mattt/sinatra-param"

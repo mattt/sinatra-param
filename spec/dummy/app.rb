@@ -52,7 +52,7 @@ class App < Sinatra::Base
   end
 
   get '/coerce/boolean' do
-    param :arg, :boolean
+    param :arg, Boolean
     params.to_json
   end
 

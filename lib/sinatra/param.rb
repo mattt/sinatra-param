@@ -6,6 +6,7 @@ require 'date'
 module Sinatra
   module Param
     Boolean = :boolean
+
     class InvalidParameterError < StandardError; end
 
     def param(name, type, options = {})

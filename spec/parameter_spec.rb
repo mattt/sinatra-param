@@ -10,4 +10,9 @@ describe 'Parameter' do
       response_body.member?('d').should eq false
     end
   end
+  it 'is a thing' do
+    get('/keys/stringify', q: 'test') do |response|
+      response.body.should eq 'TEST'
+    end
+  end
 end

@@ -19,8 +19,13 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/keys/stringify' do
+    param :q, String, transform: :upcase
+    params['q']
+  end
+
   get '/coerce/string' do
-    params[:arg] = params[:arg].to_i
+    params['arg'] = params['arg'].to_i
     param :arg, String
     params.to_json
   end

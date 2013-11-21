@@ -10,8 +10,22 @@ class App < Sinatra::Base
     content_type :json
   end
 
+  get '/' do
+    param :a, String
+    param :b, String, required: true
+    param :c, String, default: 'test'
+    param :d, String
+    
+    params.to_json
+  end
+
+  get '/keys/stringify' do
+    param :q, String, transform: :upcase
+    params['q']
+  end
+
   get '/coerce/string' do
-    params[:arg] = params[:arg].to_i
+    params['arg'] = params['arg'].to_i
     param :arg, String
     params.to_json
   end

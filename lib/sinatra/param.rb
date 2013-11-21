@@ -12,8 +12,8 @@ module Sinatra
     def param(name, type, options = {})
       name = name.to_s
 
-      return unless params.member?(name.to_s) || present?(options[:default]) || options[:required] == true
-      
+      return unless params.member?(name) or present?(options[:default]) or options[:required]
+
       begin
         params[name] = coerce(params[name], type, options) || options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]

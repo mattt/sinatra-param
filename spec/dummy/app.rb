@@ -15,12 +15,13 @@ class App < Sinatra::Base
     param :b, String, required: true
     param :c, String, default: 'test'
     param :d, String
-    
+
     params.to_json
   end
 
   get '/keys/stringify' do
     param :q, String, transform: :upcase
+
     params['q']
   end
 

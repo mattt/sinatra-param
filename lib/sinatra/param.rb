@@ -15,7 +15,8 @@ module Sinatra
       return unless params.member?(name) or present?(options[:default]) or options[:required]
 
       begin
-        params[name] = coerce(params[name], type, options) || options[:default]
+        params[name] = coerce(params[name], type, options)
+        params[name] = options[:default] if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
       rescue

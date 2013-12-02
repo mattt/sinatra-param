@@ -71,9 +71,18 @@ class App < Sinatra::Base
     params.to_json
   end
 
-  # transformations
   get '/default' do
     param :sort, String, default: "title"
+    params.to_json
+  end
+
+  get '/default/boolean/true' do
+    param :arg, Boolean, default: true
+    params.to_json
+  end
+
+  get '/default/boolean/false' do
+    param :arg, Boolean, default: false
     params.to_json
   end
 
@@ -82,7 +91,6 @@ class App < Sinatra::Base
     params.to_json
   end
 
-  # validations
   get '/validation/required' do
     param :arg, String, required: true
     params.to_json

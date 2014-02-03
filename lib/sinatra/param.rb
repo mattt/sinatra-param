@@ -27,6 +27,13 @@ module Sinatra
 
         halt 400, error
       end
+
+      @defined_params ||= []
+      @defined_params << name
+    end
+
+    def destroy_undefined_params
+      params.delete_if { |k,v| !@defined_params.member?(k) }
     end
 
     def one_of(*names)

@@ -19,7 +19,7 @@ module Sinatra
         params[name] = options[:default] if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
-      rescue
+      rescue InvalidParameterError => e
         error = "Invalid parameter, #{name}"
         if content_type and content_type.match(mime_type(:json))
           error = {message: error}.to_json

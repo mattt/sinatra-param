@@ -20,12 +20,11 @@ module Sinatra
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
       rescue InvalidParameterError => e
-        error = "Invalid parameter, #{name}"
-        if content_type and content_type.match(mime_type(:json))
-          error = {message: error}.to_json
+        if options[:on_error]
+          options[:on_error].to_proc.call(params[name])
+        else
+          default_on_error(name, options[:error_msg])
         end
-
-        halt 400, error
       end
 
       @defined_params ||= []
@@ -54,6 +53,15 @@ module Sinatra
     end
 
     private
+    def default_on_error(name, msg = nil)
+      error = "Invalid parameter, #{name}"
+      error += "\n#{msg}" if msg
+      if content_type and content_type.match(mime_type(:json))
+        error = {message: error}.to_json
+      end
+
+      halt 400, error
+    end
 
     def coerce(param, type, options = {})
       return nil if param.nil?

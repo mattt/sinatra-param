@@ -60,6 +60,19 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 - `in`, `within`, `range`
 - `min` / `max`
 
+### Error handling
+
+Decide what error message to return when a validation error occurs or pass some custom code that will handle the error. The custom code works just like `transform`. Anything that responds to `to_proc` will do.
+
+Example:
+
+``` ruby
+  get 'error_handling' do
+    param :a,     :String, in: ['a', 'A'],      error_msg: 'Must be either a or A'
+    param :order, :String, in: ["ASC", "DESC"], on_error: proc { |params| raise UnknownOrderError }
+  end
+```
+
 ### Defaults and Transformations
 
 Passing a `default` option will provide a default value for a parameter if none is passed.

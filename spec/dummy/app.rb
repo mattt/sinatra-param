@@ -156,6 +156,23 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/error_handling/on_error' do
+    param :arg, String, in: [], on_error: proc { |p| halt 400, "we had an error" }
+  end
+
+  get '/error_handling/error_msg' do
+    param :arg, String, in: [], error_msg: "can't pass this, mate"
+    params.to_json
+  end
+
+  get '/destroy_undefined_params' do
+    param :a, String
+    param :b, String
+    destroy_undefined_params
+
+    params.to_json
+  end
+
   get '/choice' do
     param :a, String
     param :b, String

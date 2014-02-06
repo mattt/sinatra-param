@@ -3,7 +3,7 @@ _Parameter Contracts for Sinatra_
 
 REST conventions take the guesswork out of designing and consuming web APIs. Simply `GET`, `POST`, `PATCH`, or `DELETE` resource endpoints, and you get what you'd expect.
 
-However, when it comes to figuring out what parameters are expected... well, all bets are off. 
+However, when it comes to figuring out what parameters are expected... well, all bets are off.
 
 This Sinatra extension takes a first step to solving this problem on the developer side
 
@@ -65,6 +65,35 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 Passing a `default` option will provide a default value for a parameter if none is passed.
 
 Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including Procs and symbols) will do.
+
+### Exceptions
+
+By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:
+
+```json
+{
+    "errors": {
+        "order": "Param must be within [\"ASC\", \"DESC\"]"
+    },
+    "message": "Invalid parameter, order"
+}
+```
+
+To change this, you can set `:raise_sinatra_param_exceptions` to `true`, and intercept `Sinatra::Param::InvalidParameterError` with a Sinatra `error do...end` block. _(To make this work in development, set `:show_exceptions` to `false`)_:
+
+```ruby
+set :raise_sinatra_param_exceptions, true
+
+error Sinatra::Param::InvalidParameterError do
+    {error: "#{env['sinatra.error'].param} is invalid"}.to_json
+end
+```
+
+Custom exception handling can also be enabled on an individual parameter basis, by passing the `raise` option:
+
+```ruby
+param :order, String, in: ["ASC", "DESC"], raise: true
+```
 
 ## Contact
 

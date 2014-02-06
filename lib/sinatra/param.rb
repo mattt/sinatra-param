@@ -7,7 +7,9 @@ module Sinatra
   module Param
     Boolean = :boolean
 
-    class InvalidParameterError < StandardError; end
+    class InvalidParameterError < StandardError
+      attr_accessor :param, :options
+    end
 
     def param(name, type, options = {})
       name = name.to_s
@@ -19,10 +21,15 @@ module Sinatra
         params[name] = options[:default] if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
-      rescue
-        error = "Invalid parameter, #{name}"
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = name, options
+          raise exception
+        end
+
+        error = "Invalid Parameter: #{name}"
         if content_type and content_type.match(mime_type(:json))
-          error = {message: error}.to_json
+          error = {message: error, errors: {name => exception.message}}.to_json
         end
 
         halt 400, error
@@ -67,9 +74,9 @@ module Sinatra
       options.each do |key, value|
         case key
         when :required
-          raise InvalidParameterError if value && param.nil?
+          raise InvalidParameterError, "Parameter is required" if value && param.nil?
         when :blank
-          raise InvalidParameterError if !value && case param
+          raise InvalidParameterError, "Parameter cannot be blank" if !value && case param
               when String
                 !(/\S/ === param)
               when Array, Hash
@@ -78,22 +85,22 @@ module Sinatra
                 param.nil?
             end
         when :is
-          raise InvalidParameterError unless value === param
+          raise InvalidParameterError, "Parameter must be #{value}" unless value === param
         when :in, :within, :range
-          raise InvalidParameterError unless param.nil? || case value
+          raise InvalidParameterError, "Parameter must be within #{value}" unless param.nil? || case value
               when Range
                 value.include?(param)
               else
                 Array(value).include?(param)
               end
         when :min
-          raise InvalidParameterError unless param.nil? || value <= param
+          raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param
         when :max
-          raise InvalidParameterError unless param.nil? || value >= param
+          raise InvalidParameterError, "Parameter cannot be greater than #{value}" unless param.nil? || value >= param
         when :min_length
-          raise InvalidParameterError unless param.nil? || value <= param.length
+          raise InvalidParameterError, "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
         when :max_length
-          raise InvalidParameterError unless param.nil? || value >= param.length
+          raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
         end
       end
     end

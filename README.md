@@ -72,14 +72,14 @@ By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400
 
 ```json
 {
+    "message": "Invalid parameter, order",
     "errors": {
         "order": "Param must be within [\"ASC\", \"DESC\"]"
-    },
-    "message": "Invalid parameter, order"
+    }
 }
 ```
 
-To change this, you can set `:raise_sinatra_param_exceptions` to `true`, and intercept `Sinatra::Param::InvalidParameterError` with a Sinatra `error do...end` block. _(To make this work in development, set `:show_exceptions` to `false`)_:
+To change this, you can set `:raise_sinatra_param_exceptions` to `true`, and intercept `Sinatra::Param::InvalidParameterError` with a Sinatra `error do...end` block. (To make this work in development, set `:show_exceptions` to `false`):
 
 ```ruby
 set :raise_sinatra_param_exceptions, true

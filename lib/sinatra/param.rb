@@ -18,7 +18,7 @@ module Sinatra
 
       begin
         params[name] = coerce(params[name], type, options)
-        params[name] = options[:default] if params[name].nil? and options[:default]
+        params[name] = default_value(options[:default]) if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
         validate!(params[name], options)
       rescue InvalidParameterError => exception
@@ -54,6 +54,10 @@ module Sinatra
     end
 
     private
+
+    def default_value(default)
+      (default.is_a?(Proc) ? default.call : default)
+    end
 
     def coerce(param, type, options = {})
       return nil if param.nil?

@@ -76,6 +76,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/default/proc' do
+    param :year, Integer, default: proc { 2014 }
+    params.to_json
+  end
+
   get '/default/boolean/true' do
     param :arg, Boolean, default: true
     params.to_json

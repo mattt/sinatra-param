@@ -8,6 +8,13 @@ describe 'Parameter Transformations' do
         JSON.parse(response.body)['sort'].should == 'title'
       end
     end
+
+    it 'sets a default value from a proc' do
+      get('/default/proc') do |response|
+        response.status.should == 200
+        JSON.parse(response.body)['year'].should == 2014
+      end
+    end
   end
 
   describe 'transform' do

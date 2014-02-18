@@ -62,14 +62,19 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 
 ### Defaults and Transformations
 
-Passing a `default` option will provide a default value for a parameter if none is passed.  A `default` can defined as either a default or as   a Proc:
+Passing a `default` option will provide a default value for a parameter if none is passed.  A `default` can defined as either a default or as a `Proc`:
 
 ```ruby
-param :year, Integer, default: 2014
-param :year, Integer, default: proc { Time.now.year }
+param :attribution, String, default: "©"
+param :year, Integer, default: lambda { Time.now.year }
 ```
 
-Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including Procs and symbols) will do.
+Use the `transform` option to take even more of the business logic of parameter I/O out of your code. Anything that responds to `to_proc` (including `Proc` and symbols) will do.
+
+```ruby
+param :order, String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
+param :offset, Integer, min: 0, transform: lambda {|n| n - (n % 10)}
+```
 
 ### Exceptions
 

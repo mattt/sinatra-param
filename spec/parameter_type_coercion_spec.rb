@@ -17,6 +17,13 @@ describe 'Parameter Types' do
         JSON.parse(response.body)['arg'].should eq(1234)
       end
     end
+
+    it 'returns 400 on requests when integer is invalid' do
+      get('/coerce/integer', arg: '123abc') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+      end
+    end
   end
 
   describe 'Float' do
@@ -24,6 +31,13 @@ describe 'Parameter Types' do
       get('/coerce/float', arg: '1234') do |response|
         response.status.should == 200
         JSON.parse(response.body)['arg'].should eq(1234.0)
+      end
+    end
+
+    it 'returns 400 on requests when float is invalid' do
+      get('/coerce/float', arg: '123abc') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
       end
     end
   end
@@ -35,6 +49,13 @@ describe 'Parameter Types' do
         JSON.parse(response.body)['arg'].should match(/2013-01-17 00:00:00/)
       end
     end
+
+    it 'returns 400 on requests when time is invalid' do
+      get('/coerce/time', arg: '123abc') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+      end
+    end
   end
 
   describe 'Date' do
@@ -44,6 +65,13 @@ describe 'Parameter Types' do
         JSON.parse(response.body)['arg'].should eq('2013-01-17')
       end
     end
+
+    it 'returns 400 on requests when date is invalid' do
+      get('/coerce/date', arg: 'abc') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+      end
+    end
   end
 
   describe 'DateTime' do
@@ -51,6 +79,13 @@ describe 'Parameter Types' do
       get('/coerce/datetime', arg: '20130117') do |response|
         response.status.should == 200
         JSON.parse(response.body)['arg'].should eq('2013-01-17T00:00:00+00:00')
+      end
+    end
+
+    it 'returns 400 on requests when datetime is invalid' do
+      get('/coerce/datetime', arg: 'abc') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
       end
     end
   end

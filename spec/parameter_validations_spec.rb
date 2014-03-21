@@ -52,6 +52,26 @@ describe 'Parameter Validations' do
     end
   end
 
+  describe 'format' do
+    it 'returns 200 on requests when value matches the param regex' do
+      get('/validation/format/hello', arg: 'hello world') do |response|
+        response.status.should eq(200)
+      end
+    end
+
+    it 'returns 400 on requests when value does not match the param regex' do
+      get('/validation/format/hello', arg: 'world') do |response|
+        response.status.should eq(400)
+      end
+    end
+
+    it 'returns 400 on requests when value is not a string' do
+      get('/validation/format/9000', arg: 9000) do |response|
+        response.status.should eq(400)
+      end
+    end
+  end
+
   describe 'is' do
     it 'returns 400 on requests when value is other than defined' do
       get('/validation/is', arg: 'bar') do |response|

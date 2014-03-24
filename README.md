@@ -33,6 +33,7 @@ class App < Sinatra::Base
     param :categories,  Array
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
+    param :price,       String, format: "[<\=>]\s*\$\d+"
 
     {...}.to_json
   end
@@ -59,6 +60,7 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 - `is`
 - `in`, `within`, `range`
 - `min` / `max`
+- `format`
 
 ### Defaults and Transformations
 

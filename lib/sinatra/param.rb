@@ -90,7 +90,7 @@ module Sinatra
             end
         when :format
           raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
-          raise InvalidParameterError, "Paramter must match format #{value}" unless param =~ value
+          raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
         when :is
           raise InvalidParameterError, "Parameter must be #{value}" unless param === value
         when :in, :within, :range

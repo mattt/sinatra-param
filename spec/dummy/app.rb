@@ -121,6 +121,16 @@ class App < Sinatra::Base
     param :arg, String, blank: true
   end
 
+  get '/validation/format/9000' do
+    param :arg, Integer, format: /9000/
+    params.to_json
+  end
+
+  get '/validation/format/hello' do
+    param :arg, String, format: /hello/
+    params.to_json
+  end
+
   get '/validation/is' do
     param :arg, String, is: 'foo'
     params.to_json

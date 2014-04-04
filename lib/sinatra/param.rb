@@ -68,10 +68,21 @@ module Sinatra
         return Array(param.split(options[:delimiter] || ",")) if type == Array
         return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
         return (/(false|f|no|n|0)$/i === param.to_s ? false : (/(true|t|yes|y|1)$/i === param.to_s ? true : nil)) if type == TrueClass || type == FalseClass || type == Boolean
+        array_of_match = /Array of (\w+)/.match(type) rescue false
+        return array_of(param, array_of_match[1], options) if array_of_match
         return nil
       rescue ArgumentError
         raise InvalidParameterError, "'#{param}' is not a valid #{type}"
       end
+    end
+
+    def array_of(param, type, options)
+      type = Object.const_get(type) rescue type
+      type = Boolean if type == 'Boolean'
+      if !param.is_a?(Array)
+        param = Array(param.split(options[:delimiter] || ","))
+      end
+      return param.map{ |p| coerce(p, type, options) }
     end
 
     def validate!(param, options)

@@ -109,6 +109,74 @@ describe 'Parameter Types' do
       end
     end
   end
+  
+  describe 'Array of' do
+    it 'coerces array of String' do
+      get('/coerce/array/string', arg: '1,2,3,4,5') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].each{ |p| p.should be_an(String) }
+        parsed_body['arg'].should eq(%w(1 2 3 4 5))
+      end
+    end
+    
+    it 'coerces array of Integer' do
+      get('/coerce/array/integer', arg: '1,2,3,4,5') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].each{ |p| p.should be_an(Integer) }
+        parsed_body['arg'].should eq([1,2,3,4,5])
+      end
+    end
+    
+    it 'coerces array of Float' do
+      get('/coerce/array/float', arg: '1,2,3,4,5') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].each{ |p| p.should be_an(Float) }
+        parsed_body['arg'].should eq([1,2,3,4,5])
+      end
+    end
+    
+    it 'coerces array of time' do
+      get('/coerce/array/time', arg: '20130117,20130118') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].should eq([Time.new(2013,01,17).to_s, Time.new(2013,01,18).to_s])
+      end
+    end
+    
+    it 'coerces array of date' do
+      get('/coerce/array/date', arg: '20130117,20130118') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].should eq([Date.new(2013,01,17).to_s, Date.new(2013,01,18).to_s])
+      end
+    end
+    
+    it 'coerces array of datetime' do
+      get('/coerce/array/datetime', arg: '20130117,20130118') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].should eq([DateTime.new(2013,01,17).to_s, DateTime.new(2013,01,18).to_s])
+      end
+    end
+    
+    it 'coerces array of boolean' do
+      get('/coerce/array/boolean', arg: '1,true,t,yes,t,0,false,f,no,n') do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].should eq([true,true,true,true,true,false,false,false,false,false])
+      end
+    end
+  end
 
   describe 'Hash' do
     it 'coerces hashes' do

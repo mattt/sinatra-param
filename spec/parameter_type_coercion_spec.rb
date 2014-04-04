@@ -111,69 +111,127 @@ describe 'Parameter Types' do
   end
   
   describe 'Array of' do
-    it 'coerces array of String' do
-      get('/coerce/array/string', arg: '1,2,3,4,5') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].each{ |p| p.should be_an(String) }
-        parsed_body['arg'].should eq(%w(1 2 3 4 5))
+    describe "String" do 
+      it 'coerces array of String' do
+        get('/coerce/array/string', arg: '1,2,3,4,5') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].each{ |p| p.should be_an(String) }
+          parsed_body['arg'].should eq(%w(1 2 3 4 5))
+        end
       end
     end
-    
-    it 'coerces array of Integer' do
-      get('/coerce/array/integer', arg: '1,2,3,4,5') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].each{ |p| p.should be_an(Integer) }
-        parsed_body['arg'].should eq([1,2,3,4,5])
+   
+    describe 'Integer' do
+      it 'coerces array of Integer' do
+        get('/coerce/array/integer', arg: '1,2,3,4,5') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].each{ |p| p.should be_an(Integer) }
+          parsed_body['arg'].should eq([1,2,3,4,5])
+        end
+      end
+      
+      it 'returns 400 on requests when array of integer is invalid' do
+        get('/coerce/array/integer', arg: '1,2,3,123abc') do |response|
+          response.status.should == 400
+          JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+        end
       end
     end
-    
-    it 'coerces array of Float' do
-      get('/coerce/array/float', arg: '1,2,3,4,5') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].each{ |p| p.should be_an(Float) }
-        parsed_body['arg'].should eq([1,2,3,4,5])
+   
+    describe 'Float' do
+      it 'coerces array of Float' do
+        get('/coerce/array/float', arg: '1,2,3,4,5') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].each{ |p| p.should be_an(Float) }
+          parsed_body['arg'].should eq([1,2,3,4,5])
+        end
+      end
+      
+      it 'returns 400 on requests when array of float is invalid' do
+        get('/coerce/array/float', arg: '1,2,3,123abc') do |response|
+          response.status.should == 400
+          JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+        end
       end
     end
-    
-    it 'coerces array of time' do
-      get('/coerce/array/time', arg: '20130117,20130118') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].should eq([Time.new(2013,01,17).to_s, Time.new(2013,01,18).to_s])
+   
+    describe "Time" do
+      it 'coerces array of time' do
+        get('/coerce/array/time', arg: '20130117,20130118') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].should eq([Time.new(2013,01,17).to_s, Time.new(2013,01,18).to_s])
+        end
+      end
+      
+      it 'returns 400 on requests when time is invalid' do
+        get('/coerce/array/time', arg: '20130117,123abc') do |response|
+          response.status.should == 400
+          JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+        end
       end
     end
-    
-    it 'coerces array of date' do
-      get('/coerce/array/date', arg: '20130117,20130118') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].should eq([Date.new(2013,01,17).to_s, Date.new(2013,01,18).to_s])
+   
+    describe "Date" do
+      it 'coerces array of date' do
+        get('/coerce/array/date', arg: '20130117,20130118') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].should eq([Date.new(2013,01,17).to_s, Date.new(2013,01,18).to_s])
+        end
+      end
+      
+      it 'returns 400 on requests when date is invalid' do
+        get('/coerce/array/date', arg: '20130117,abc') do |response|
+          response.status.should == 400
+          JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+        end
       end
     end
+
+    describe "DateTime" do
+      it 'coerces array of datetime' do
+        get('/coerce/array/datetime', arg: '20130117,20130118') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].should eq([DateTime.new(2013,01,17).to_s, DateTime.new(2013,01,18).to_s])
+        end
+      end
     
-    it 'coerces array of datetime' do
-      get('/coerce/array/datetime', arg: '20130117,20130118') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].should eq([DateTime.new(2013,01,17).to_s, DateTime.new(2013,01,18).to_s])
+      it 'returns 400 on requests when datetime is invalid' do
+        get('/coerce/array/datetime', arg: '20130117,abc') do |response|
+          response.status.should == 400
+          JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+        end
       end
     end
-    
-    it 'coerces array of boolean' do
-      get('/coerce/array/boolean', arg: '1,true,t,yes,t,0,false,f,no,n') do |response|
-        response.status.should == 200
-        parsed_body = JSON.parse(response.body)
-        parsed_body['arg'].should be_an(Array)
-        parsed_body['arg'].should eq([true,true,true,true,true,false,false,false,false,false])
+   
+    describe "Boolean" do
+      it 'coerces array of boolean' do
+        get('/coerce/array/boolean', arg: '1,true,t,yes,t,0,false,f,no,n') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].should eq([true,true,true,true,true,false,false,false,false,false])
+        end
+      end
+      
+      it 'coerces to nil on unkown truth values' do
+        get('/coerce/array/boolean', arg: '1,true,0,false,xyz,abc') do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].should eq([true, true, false, false, nil, nil])
+        end
       end
     end
   end

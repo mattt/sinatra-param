@@ -153,6 +153,16 @@ describe 'Parameter Types' do
         end
       end
       
+      it 'coerces array of Integer (arg[] style)' do
+        get('/coerce/array/integer', 'arg[]' => ['1','2','3','4','5']) do |response|
+          response.status.should == 200
+          parsed_body = JSON.parse(response.body)
+          parsed_body['arg'].should be_an(Array)
+          parsed_body['arg'].each{ |p| p.should be_an(Integer) }
+          parsed_body['arg'].should eq([1,2,3,4,5])
+        end
+      end
+      
       it 'coerces array of Integer (size 1)' do
         get('/coerce/array/integer', arg: '1') do |response|
           response.status.should == 200

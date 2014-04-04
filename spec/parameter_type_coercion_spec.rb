@@ -99,6 +99,15 @@ describe 'Parameter Types' do
         parsed_body['arg'].should eq(%w(1 2 3 4 5))
       end
     end
+    
+    it 'coerces arrays with arg[] style' do
+      get('/coerce/array', 'arg[]' => ['1','2','3','4','5']) do |response|
+        response.status.should == 200
+        parsed_body = JSON.parse(response.body)
+        parsed_body['arg'].should be_an(Array)
+        parsed_body['arg'].should eq(%w(1 2 3 4 5))
+      end
+    end
   end
 
   describe 'Hash' do

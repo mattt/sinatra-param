@@ -143,6 +143,10 @@ class App < Sinatra::Base
   get '/validation/blank/array' do
     param :arg, Array, blank: false
   end
+  
+  get '/validation/blank/array/integer' do
+    param :arg, "Array of Integer", blank: false
+  end
 
   get '/validation/blank/hash' do
     param :arg, Hash, blank: false

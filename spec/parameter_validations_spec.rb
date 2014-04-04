@@ -30,6 +30,13 @@ describe 'Parameter Validations' do
         JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
       end
     end
+    
+    it 'returns 400 on requests when array is blank' do
+      get('/validation/blank/array/integer', arg: '') do |response|
+        response.status.should eq(400)
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+      end
+    end
 
     it 'returns 400 on requests when hash is blank' do
       get('/validation/blank/hash', arg: '') do |response|

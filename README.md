@@ -50,6 +50,7 @@ By declaring parameter types, incoming parameters will automatically be transfor
 - `Boolean` _("1/0", "true/false", "t/f", "yes/no", "y/n")_
 - `Array` _("1,2,3,4,5")_
 - `Hash` _(key1:value1,key2:value2)_
+- `Date`, `Time`, & `DateTime`
 
 ### Validations
 

@@ -1,10 +1,14 @@
 require 'sinatra/base'
 require 'sinatra/param'
-require 'json'
+require 'date'
 require 'time'
+require 'json'
 
 class App < Sinatra::Base
   helpers Sinatra::Param
+
+  set :show_exceptions, false
+  set :raise_errors, true
 
   before do
     content_type :json
@@ -181,5 +185,10 @@ class App < Sinatra::Base
     {
       message: 'OK'
     }.to_json
+  end
+
+  get '/raise' do
+    param :arg, String, required: true, raise: true
+    params.to_json
   end
 end

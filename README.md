@@ -1,5 +1,5 @@
 # sinatra-param
-_Parameter Contracts for Sinatra_
+_Parameter Validation & Type Coercion for Sinatra_
 
 REST conventions take the guesswork out of designing and consuming web APIs. Simply `GET`, `POST`, `PATCH`, or `DELETE` resource endpoints, and you get what you'd expect.
 

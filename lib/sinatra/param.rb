@@ -19,7 +19,7 @@ module Sinatra
       begin
         params[name] = coerce(params[name], type, options)
         params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
-        params[name] = options[:transform].to_proc.call(params[name]) if options[:transform]
+        params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
         validate!(params[name], options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)

@@ -100,6 +100,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/transform/required' do
+    param :order, String, required: true, transform: :upcase
+    params.to_json
+  end
+
   get '/validation/required' do
     param :arg, String, required: true
     params.to_json

@@ -24,5 +24,12 @@ describe 'Parameter Transformations' do
         JSON.parse(response.body)['order'].should == 'ASC'
       end
     end
+
+    it 'skips transformations when the value is nil' do
+      get('/transform/required') do |response|
+        response.status.should == 400
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: order')
+      end
+    end
   end
 end

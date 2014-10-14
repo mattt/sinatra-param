@@ -191,4 +191,19 @@ describe 'Parameter Validations' do
       end
     end
   end
+
+  describe 'required_keys' do
+    it 'returns 400 on requests with a Hash without matching required_keys' do
+      get('/validation/required_keys', arg: 'a:b') do |response|
+        response.status.should eq(400)
+        JSON.parse(response.body)['message'].should eq('Invalid Parameter: arg')
+      end
+    end
+
+    it 'returns 200 on requests with matching required_keys' do
+      get('/validation/required_keys', arg: 'c:d,d:f,g:h') do |response|
+        response.status.should eq(200)
+      end
+    end
+  end
 end

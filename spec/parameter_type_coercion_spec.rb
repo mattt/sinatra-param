@@ -135,7 +135,7 @@ describe 'Parameter Types' do
       %w(1 true t yes y).each do |bool|
         get('/coerce/boolean', arg: bool) do |response|
           response.status.should == 200
-          JSON.parse(response.body)['arg'].should be_true
+          JSON.parse(response.body)['arg'].should be true
         end
       end
     end
@@ -144,7 +144,7 @@ describe 'Parameter Types' do
       %w(0 false f no n).each do |bool|
         get('/coerce/boolean', arg: bool) do |response|
           response.status.should == 200
-          JSON.parse(response.body)['arg'].should be_false
+          JSON.parse(response.body)['arg'].should be false
           JSON.parse(response.body)['arg'].should_not be_nil
         end
       end
@@ -154,7 +154,7 @@ describe 'Parameter Types' do
       %w(1 true t yes y).each do |bool|
         get('/default/boolean/false', arg: bool) do |response|
           response.status.should == 200
-          JSON.parse(response.body)['arg'].should be_true
+          JSON.parse(response.body)['arg'].should be true
         end
       end
     end
@@ -163,7 +163,7 @@ describe 'Parameter Types' do
       %w(0 false f no n).each do |bool|
         get('/default/boolean/true', arg: bool) do |response|
           response.status.should == 200
-          JSON.parse(response.body)['arg'].should be_false
+          JSON.parse(response.body)['arg'].should be false
           JSON.parse(response.body)['arg'].should_not be_nil
         end
       end

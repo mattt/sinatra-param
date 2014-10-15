@@ -108,6 +108,9 @@ module Sinatra
           raise InvalidParameterError, "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
         when :max_length
           raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
+        when :required_keys
+          raise InvalidParameterError, "Parameter must be a Hash if using the required_keys validation" unless param.kind_of?(Hash)
+          raise InvalidParameterError, "Parameter must have keys #{Array(value).join(', ')}" unless param.nil? || Array(value).all? {|k|param.has_key?(k)}
         end
       end
     end

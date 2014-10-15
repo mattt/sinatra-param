@@ -180,6 +180,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/required_keys' do
+    param :arg, Hash, required_keys: ['c', 'd']
+    params.to_json
+  end
+
   get '/choice' do
     param :a, String
     param :b, String

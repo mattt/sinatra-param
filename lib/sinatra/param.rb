@@ -25,6 +25,10 @@ module Sinatra
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = name, options
           raise exception
+        elsif (settings.sinatra_param_build_error_array rescue false)
+          env[:sinatra_param_errors] ||= []
+          env[:sinatra_param_errors] << { param: name, message: exception.message }
+          return
         end
 
         error = "Invalid Parameter: #{name}"

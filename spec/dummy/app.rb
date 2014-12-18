@@ -196,4 +196,11 @@ class App < Sinatra::Base
     param :arg, String, required: true, raise: true
     params.to_json
   end
+
+  get '/build_error_array' do
+    param :a, String, required: true
+    param :b, String, required: true
+
+    env[:sinatra_param_errors].to_json
+  end
 end

@@ -108,6 +108,32 @@ Custom exception handling can also be enabled on an individual parameter basis, 
 param :order, String, in: ["ASC", "DESC"], raise: true
 ```
 
+### Array of validation errors
+
+We sometimes want to process an entire submission for errors (rather than
+halting on the first one), so the user has a chance to address them all at once.
+We accomplish this by pushing every error encountered onto an array stored in
+the environment.
+
+To enable this behavior, set the `sinatra_param_build_error_array` to true,
+like so:
+
+```ruby
+set :sinatra_param_build_error_array, true
+```
+
+The errors will be pushed onto an array in the `env[:sinatra_param_errors]`
+environment variable:
+
+```ruby
+param :q,           String, required: true
+param :categories,  Array
+
+if env[:sinatra_param_errors].any?
+  # ...
+end
+```
+
 ## Contact
 
 Mattt Thompson

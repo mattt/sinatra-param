@@ -10,8 +10,8 @@ describe 'Parameter Sets' do
       ]
       params.each do |param|
         get('/choice', param) do |response|
-          response.status.should == 400
-          JSON.parse(response.body)['message'].should =~ /mutually exclusive/
+          expect(response.status).to eql 400
+          expect(JSON.parse(response.body)['message']).to match(/mutually exclusive/)
         end
       end
     end
@@ -24,8 +24,8 @@ describe 'Parameter Sets' do
       ]
       params.each do |param|
         get('/choice', param) do |response|
-          response.status.should == 200
-          JSON.parse(response.body)['message'].should =~ /OK/
+          expect(response.status).to eql 200
+          expect(JSON.parse(response.body)['message']).to match(/OK/)
         end
       end
     end

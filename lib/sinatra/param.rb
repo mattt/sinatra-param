@@ -36,11 +36,23 @@ module Sinatra
       end
     end
 
-    def one_of(*names)
-      if names.collect(&:to_s).count{|name| present?(params[name])} > 1
+    def one_of(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length > 2
+
+      begin
+        validate_one_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
         error = "Parameters #{names.join(', ')} are mutually exclusive"
         if content_type and content_type.match(mime_type(:json))
-          error = {message: error}.to_json
+          error = {message: error, errors: {names => exception.message}}.to_json
         end
 
         halt 400, error
@@ -104,6 +116,10 @@ module Sinatra
           raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
         end
       end
+    end
+
+    def validate_one_of!(params, names, options)
+      raise InvalidParameterError, "Parameters #{names.join(', ')} are mutually exclusive" if names.count{|name| present?(params[name])} > 1
     end
 
     # ActiveSupport #present? and #blank? without patching Object

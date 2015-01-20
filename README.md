@@ -35,6 +35,8 @@ class App < Sinatra::Base
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
     param :price,       String, format: "[<\=>]\s*\$\d+"
 
+    one_of :q, :categories
+
     {...}.to_json
   end
 end
@@ -79,6 +81,18 @@ param :order, String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
 param :offset, Integer, min: 0, transform: lambda {|n| n - (n % 10)}
 ```
 
+### Mutual Exclusivity
+
+Using `one_of`, routes can specify two or more parameters to be mutually exclusive, and fail if more than one of those parameters is specified:
+
+```ruby
+param :a, String
+param :b, String
+param :c, String
+
+one_of :a, :b, :c
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:
@@ -106,6 +120,8 @@ Custom exception handling can also be enabled on an individual parameter basis, 
 
 ```ruby
 param :order, String, in: ["ASC", "DESC"], raise: true
+
+one_of :q, :categories, raise: true
 ```
 
 ## Contact

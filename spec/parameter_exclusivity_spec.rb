@@ -8,6 +8,7 @@ describe 'Parameter Sets' do
         {b: 2, c: 3},
         {a: 1, b: 2, c: 3}
       ]
+
       params.each do |param|
         get('/choice', param) do |response|
           expect(response.status).to eql 400
@@ -16,17 +17,25 @@ describe 'Parameter Sets' do
       end
     end
 
-    it 'returns successfully for requests that only have one parameter' do
+    it 'returns successfully for requests that have one parameter' do
       params = [
         {a: 1},
         {b: 2},
         {c: 3}
       ]
+
       params.each do |param|
         get('/choice', param) do |response|
           expect(response.status).to eql 200
           expect(JSON.parse(response.body)['message']).to match(/OK/)
         end
+      end
+    end
+
+    it 'returns successfully for requests that have no parameter' do
+      get('/choice') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['message']).to match(/OK/)
       end
     end
   end

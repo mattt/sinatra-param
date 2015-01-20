@@ -40,7 +40,7 @@ module Sinatra
       options = args.last.is_a?(Hash) ? args.pop : {}
       names = args.collect(&:to_s)
 
-      return unless names.length > 2
+      return unless names.length >= 2
 
       begin
         validate_one_of!(params, names, options)

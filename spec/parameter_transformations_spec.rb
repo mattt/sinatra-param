@@ -9,6 +9,13 @@ describe 'Parameter Transformations' do
       end
     end
 
+    it 'sets a default value from an empty hash' do
+      get('/default/hash') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['attributes']).to eql Hash.new
+      end
+    end
+
     it 'sets a default value from a proc' do
       get('/default/proc') do |response|
         expect(response.status).to eql 200

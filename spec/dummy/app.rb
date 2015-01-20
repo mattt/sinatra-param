@@ -80,6 +80,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/default/hash' do
+    param :attributes, Hash, default: {}
+    params.to_json
+  end
+
   get '/default/proc' do
     param :year, Integer, default: proc { 2014 }
     params.to_json

@@ -37,19 +37,13 @@ module Sinatra
     end
 
     def one_of(*names)
-      count = 0
-      names.each do |name|
-        if params[name] and present?(params[name])
-          count += 1
-          next unless count > 1
-
-          error = "Parameters #{names.join(', ')} are mutually exclusive"
-          if content_type and content_type.match(mime_type(:json))
-            error = {message: error}.to_json
-          end
-
-          halt 400, error
+      if names.count{|name| params[name] and present?(params[name])} > 1
+        error = "Parameters #{names.join(', ')} are mutually exclusive"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error}.to_json
         end
+
+        halt 400, error
       end
     end
 

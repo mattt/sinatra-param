@@ -17,6 +17,13 @@ describe 'Parameter Sets' do
       end
     end
 
+    it 'returns 400 on requests that contain more than one mutually exclusive parameter' do
+      get('/choice2', {a: 1, b: 2}) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to match(/mutually exclusive/)
+      end
+    end
+
     it 'returns successfully for requests that have one parameter' do
       params = [
         {a: 1},

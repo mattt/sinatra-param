@@ -197,6 +197,18 @@ class App < Sinatra::Base
     }.to_json
   end
 
+  get '/choice/groups' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    one_of [:a, :b], [:a, :c]
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
   get '/raise/validation/required' do
     param :arg, String, required: true, raise: true
     params.to_json

@@ -38,9 +38,9 @@ module Sinatra
 
     def one_of(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
-      names = args.collect(&:to_s)
+      names = args
 
-      return unless names.length > 2
+      return unless names.length >= 2
 
       begin
         validate_one_of!(params, names, options)
@@ -118,13 +118,20 @@ module Sinatra
       end
     end
 
-    def validate_one_of!(params, names, options)
-      raise InvalidParameterError, "Parameters #{names.join(', ')} are mutually exclusive" if names.count{|name| present?(params[name])} > 1
+    def validate_one_of!(params, groups, options)
+      if groups.select {|names| params_present?(params, names) }.length > 1
+        raise InvalidParameterError, "Parameters #{groups.collect(&:inspect).join(', ')} are mutually exclusive"
+      end
     end
 
     # ActiveSupport #present? and #blank? without patching Object
     def present?(object)
       !blank?(object)
+    end
+
+    def params_present?(params, names)
+      names = Array(names)
+      names.select{|name| present?(params[name.to_s]) }.length == names.length
     end
 
     def blank?(object)

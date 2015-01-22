@@ -10,7 +10,7 @@ describe 'Parameter Sets' do
       ]
 
       params.each do |param|
-        get('/choice', param) do |response|
+        get('/choice/3', param) do |response|
           expect(response.status).to eql 400
           expect(JSON.parse(response.body)['message']).to match(/mutually exclusive/)
         end
@@ -18,7 +18,9 @@ describe 'Parameter Sets' do
     end
 
     it 'returns 400 on requests that contain more than one mutually exclusive parameter' do
-      get('/choice2', {a: 1, b: 2}) do |response|
+      params = {a: 1, b: 2}
+
+      get('/choice/2', params) do |response|
         expect(response.status).to eql 400
         expect(JSON.parse(response.body)['message']).to match(/mutually exclusive/)
       end
@@ -31,18 +33,22 @@ describe 'Parameter Sets' do
         {c: 3}
       ]
 
-      params.each do |param|
-        get('/choice', param) do |response|
-          expect(response.status).to eql 200
-          expect(JSON.parse(response.body)['message']).to match(/OK/)
+      (1..3).each do |n|
+        params.each do |param|
+          get("/choice/#{n}", param) do |response|
+            expect(response.status).to eql 200
+            expect(JSON.parse(response.body)['message']).to match(/OK/)
+          end
         end
       end
     end
 
     it 'returns successfully for requests that have no parameter' do
-      get('/choice') do |response|
-        expect(response.status).to eql 200
-        expect(JSON.parse(response.body)['message']).to match(/OK/)
+      (1..3).each do |n|
+        get("/choice/#{n}") do |response|
+          expect(response.status).to eql 200
+          expect(JSON.parse(response.body)['message']).to match(/OK/)
+        end
       end
     end
   end

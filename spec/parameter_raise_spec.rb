@@ -12,7 +12,7 @@ describe 'Exception' do
   it 'should raise error when more than one parameter is specified' do
     params = {a: 1, b: 2, c: 3}
     expect {
-      get('/raise/choice', params)
+      get('/raise/choice/3', params)
     }.to raise_error
   end
 end

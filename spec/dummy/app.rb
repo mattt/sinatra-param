@@ -190,7 +190,7 @@ class App < Sinatra::Base
     param :b, String
     param :c, String
 
-    one_of :a
+    only_one_of :a
 
     {
       message: 'OK'
@@ -202,7 +202,7 @@ class App < Sinatra::Base
     param :b, String
     param :c, String
 
-    one_of :a, :b
+    only_one_of :a, :b
 
     {
       message: 'OK'
@@ -214,12 +214,25 @@ class App < Sinatra::Base
     param :b, String
     param :c, String
 
-    one_of :a, :b, :c
+    only_one_of :a, :b, :c
 
     {
       message: 'OK'
     }.to_json
   end
+
+  get '/atleast' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    at_least_one_of :a, :b, :c
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
 
   get '/raise/validation/required' do
     param :arg, String, required: true, raise: true

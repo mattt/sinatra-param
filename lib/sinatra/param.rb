@@ -36,14 +36,14 @@ module Sinatra
       end
     end
 
-    def one_of(*args)
+    def only_one_of(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       names = args.collect(&:to_s)
 
       return unless names.length >= 2
 
       begin
-        validate_one_of!(params, names, options)
+        validate_only_one_of!(params, names, options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = names, options
@@ -51,6 +51,28 @@ module Sinatra
         end
 
         error = "Parameters #{names.join(', ')} are mutually exclusive"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error, errors: {names => exception.message}}.to_json
+        end
+
+        halt 400, error
+      end
+    end
+    alias_method :one_of, :only_one_of
+
+    def at_least_one_of(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      begin
+        validate_at_least_one_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
+        error = "At least one of the following parameters is required: #{names.join(', ')}"
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {names => exception.message}}.to_json
         end
@@ -118,8 +140,12 @@ module Sinatra
       end
     end
 
-    def validate_one_of!(params, names, options)
+    def validate_only_one_of!(params, names, options)
       raise InvalidParameterError, "Parameters #{names.join(', ')} are mutually exclusive" if names.count{|name| present?(params[name])} > 1
+    end
+
+    def validate_at_least_one_of!(params, names, options)
+      raise InvalidParameterError, "At least one of the following parameters is required: #{names.join(', ')}" if names.count{|name| present?(params[name])} < 1
     end
 
     # ActiveSupport #present? and #blank? without patching Object

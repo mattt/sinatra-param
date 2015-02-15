@@ -185,7 +185,7 @@ class App < Sinatra::Base
     params.to_json
   end
 
-  get '/choice/1' do
+  get '/one_of/1' do
     param :a, String
     param :b, String
     param :c, String
@@ -197,7 +197,7 @@ class App < Sinatra::Base
     }.to_json
   end
 
-  get '/choice/2' do
+  get '/one_of/2' do
     param :a, String
     param :b, String
     param :c, String
@@ -209,7 +209,7 @@ class App < Sinatra::Base
     }.to_json
   end
 
-  get '/choice/3' do
+  get '/one_of/3' do
     param :a, String
     param :b, String
     param :c, String
@@ -221,17 +221,41 @@ class App < Sinatra::Base
     }.to_json
   end
 
+  get '/any_of' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    any_of :a, :b, :c
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
   get '/raise/validation/required' do
     param :arg, String, required: true, raise: true
     params.to_json
   end
 
-  get '/raise/choice/3' do
+  get '/raise/one_of/3' do
     param :a, String
     param :b, String
     param :c, String
 
     one_of :a, :b, :c, raise: true
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/raise/any_of' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    any_of :a, :b, :c, raise: true
 
     {
       message: 'OK'

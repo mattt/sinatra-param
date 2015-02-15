@@ -81,9 +81,9 @@ param :order, String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
 param :offset, Integer, min: 0, transform: lambda {|n| n - (n % 10)}
 ```
 
-### Mutual Exclusivity
+## One Of
 
-Using `one_of`, routes can specify two or more parameters to be mutually exclusive, and fail if more than one of those parameters is specified:
+Using `one_of`, routes can specify two or more parameters to be mutually exclusive, and fail if _more than one_ of those parameters is provided:
 
 ```ruby
 param :a, String
@@ -91,6 +91,17 @@ param :b, String
 param :c, String
 
 one_of :a, :b, :c
+```
+
+## Any Of
+
+Using `any_of`, a route can specify that _at least one of_ two or more parameters are required, and fail if _none of them_ are provided:
+
+```ruby
+param :x, String
+param :y, String
+
+any_of :x, :y
 ```
 
 ### Exceptions

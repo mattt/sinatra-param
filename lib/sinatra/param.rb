@@ -50,7 +50,30 @@ module Sinatra
           raise exception
         end
 
-        error = "Parameters #{names.join(', ')} are mutually exclusive"
+        error = "Invalid parameters [#{names.join(', ')}]"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error, errors: {names => exception.message}}.to_json
+        end
+
+        halt 400, error
+      end
+    end
+
+    def any_of(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length >= 2
+
+      begin
+        validate_any_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
+        error = "Invalid parameters [#{names.join(', ')}]"
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {names => exception.message}}.to_json
         end
@@ -119,7 +142,11 @@ module Sinatra
     end
 
     def validate_one_of!(params, names, options)
-      raise InvalidParameterError, "Parameters #{names.join(', ')} are mutually exclusive" if names.count{|name| present?(params[name])} > 1
+      raise InvalidParameterError, "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
+    end
+
+    def validate_any_of!(params, names, options)
+      raise InvalidParameterError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
     end
 
     # ActiveSupport #present? and #blank? without patching Object

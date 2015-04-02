@@ -72,6 +72,21 @@ describe 'Parameter Validations' do
     end
   end
 
+  describe 'has_keys' do
+    it 'returns 400 on requests when a value is not found as a key name' do
+      get('/validation/has_keys', arg: {foo: 'bar'}) do |response|
+        expect(response.status).to eq(400)
+        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+      end
+    end
+
+    it 'returns 200 on requests with a value is other than defined' do
+      get('/validation/has_keys', arg: {id: 'foobar'}) do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   describe 'is' do
     it 'returns 400 on requests when value is other than defined' do
       get('/validation/is', arg: 'bar') do |response|

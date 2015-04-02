@@ -87,25 +87,30 @@ module Sinatra
           raise InvalidParameterError, "Parameter is required" if value && param.nil?
         when :blank
           raise InvalidParameterError, "Parameter cannot be blank" if !value && case param
-              when String
-                !(/\S/ === param)
-              when Array, Hash
-                param.empty?
-              else
-                param.nil?
-            end
+          when String
+            !(/\S/ === param)
+          when Array, Hash
+            param.empty?
+          else
+            param.nil?
+          end
         when :format
           raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
           raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
+        when :has_keys
+          raise InvalidParameterError, "Parameter is required" if value && param.nil?
+          raise InvalidParameterError, "Parameter must be an Array" unless value.kind_of?(Array)
+          all = value.all?{ |v| param.has_key?(v.to_s) || param.has_key?(v.to_sym) }
+          raise InvalidParameterError, "Parameter must have key(s) named #{value}" unless all
         when :is
           raise InvalidParameterError, "Parameter must be #{value}" unless param === value
         when :in, :within, :range
           raise InvalidParameterError, "Parameter must be within #{value}" unless param.nil? || case value
-              when Range
-                value.include?(param)
-              else
-                Array(value).include?(param)
-              end
+          when Range
+            value.include?(param)
+          else
+            Array(value).include?(param)
+          end
         when :min
           raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param
         when :max

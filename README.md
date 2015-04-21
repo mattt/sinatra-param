@@ -11,6 +11,20 @@ This Sinatra extension takes a first step to solving this problem on the develop
 
 > Use `sinatra-param` in combination with [`Rack::PostBodyContentTypeParser` and `Rack::NestedParams`](https://github.com/rack/rack-contrib) to automatically parameterize JSON `POST` bodies and nested parameters.
 
+## Install
+
+You can install `sinatra-param` from the command line with the following:
+
+```bash
+$ gem install sinatra-param
+```
+
+Alternatively, you can specify `sinatra-param` as a dependency in your `Gemfile` and run `$ bundle install`:
+
+```ruby
+gem "sinatra-param", require: "sinatra/param"
+```
+
 ## Example
 
 ``` ruby

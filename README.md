@@ -151,11 +151,7 @@ one_of :q, :categories, raise: true
 
 ## Contact
 
-Mattt Thompson
-
-- http://github.com/mattt
-- http://twitter.com/mattt
-- m@mattt.me
+Mattt Thompson ([@mattt](http://twitter.com/mattt))
 
 ## License
 

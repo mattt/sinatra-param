@@ -21,7 +21,7 @@ describe 'Parameter Types' do
     it 'returns 400 on requests when integer is invalid' do
       get('/coerce/integer', arg: '123abc') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+        expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Integer")
       end
     end
   end
@@ -37,7 +37,7 @@ describe 'Parameter Types' do
     it 'returns 400 on requests when float is invalid' do
       get('/coerce/float', arg: '123abc') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+        expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Float")
       end
     end
   end
@@ -53,7 +53,7 @@ describe 'Parameter Types' do
     it 'returns 400 on requests when time is invalid' do
       get('/coerce/time', arg: '123abc') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+        expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Time")
       end
     end
   end
@@ -69,7 +69,7 @@ describe 'Parameter Types' do
     it 'returns 400 on requests when date is invalid' do
       get('/coerce/date', arg: 'abc') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+        expect(JSON.parse(response.body)['message']).to eq("'abc' is not a valid Date")
       end
     end
   end
@@ -85,7 +85,7 @@ describe 'Parameter Types' do
     it 'returns 400 on requests when datetime is invalid' do
       get('/coerce/datetime', arg: 'abc') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq('Invalid Parameter: arg')
+        expect(JSON.parse(response.body)['message']).to eq("'abc' is not a valid DateTime")
       end
     end
   end

@@ -145,4 +145,4 @@ Mattt Thompson
 
 ## License
 
-sinatra-param is available under the MIT license. See the LICENSE file for more info.
+sinatra-param is released under an MIT license. See LICENSE for more information.

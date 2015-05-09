@@ -47,7 +47,7 @@ class App < Sinatra::Base
     param :categories,  Array
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
-    param :price,       String, format: "[<\=>]\s*\$\d+"
+    param :price,       String, format: /[<\=>]\s*\$\d+/
 
     one_of :q, :categories
 

@@ -102,6 +102,21 @@ describe 'Parameter Validations' do
     end
   end
 
+  describe 'if' do
+    it 'validates when call evaluates to true' do
+      get('/validation/if', arg: 'foobar', arg2: 'foo') do |response|
+        expect(response.status).to eq(400)
+        expect(JSON.parse(response.body)['message']).to eq("'foobar' is not a valid Integer")
+      end
+    end
+
+    it 'does not validate when call evaluates to false' do
+      get('/validation/if', arg: 'foobar') do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+  end
+
   describe 'within' do
     it 'returns 400 on requests with a value outside the range' do
       get('/validation/within', arg: 20) do |response|

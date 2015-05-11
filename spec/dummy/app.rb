@@ -160,6 +160,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/if' do
+    param :arg, Integer, if: ->{ params[:arg2] == 'foo' }
+    params.to_json
+  end
+
   get '/validation/range' do
     param :arg, Integer, range: 1..10
     params.to_json

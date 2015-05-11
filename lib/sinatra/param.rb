@@ -15,6 +15,7 @@ module Sinatra
       name = name.to_s
 
       return unless params.member?(name) or options[:default] or options[:required]
+      return if options[:if] && options[:if].call == false
 
       begin
         params[name] = coerce(params[name], type, options)

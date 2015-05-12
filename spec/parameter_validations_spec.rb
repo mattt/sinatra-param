@@ -5,7 +5,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests without required fields' do
       get('/validation/required') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter is required")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' is required")
       end
     end
 
@@ -20,28 +20,28 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests when string is blank' do
       get('/validation/blank/string', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when array is blank' do
       get('/validation/blank/array', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when hash is blank' do
       get('/validation/blank/hash', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when hash is blank' do
       get('/validation/blank/other', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 

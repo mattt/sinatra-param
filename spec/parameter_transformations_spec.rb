@@ -35,7 +35,7 @@ describe 'Parameter Transformations' do
     it 'skips transformations when the value is nil' do
       get('/transform/required') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq("Parameter is required")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'order' is required")
       end
     end
   end

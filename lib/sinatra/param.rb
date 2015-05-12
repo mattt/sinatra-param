@@ -20,7 +20,8 @@ module Sinatra
         params[name] = coerce(params[name], type, options)
         params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
-        validate!(params[name], options)
+        value = params[name]
+        validate!(name, value, options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = name, options
@@ -104,40 +105,40 @@ module Sinatra
       end
     end
 
-    def validate!(param, options)
+    def validate!(param_name, param_value, options)
       options.each do |key, value|
         case key
         when :required
-          raise InvalidParameterError, "Parameter is required" if value && param.nil?
+          raise InvalidParameterError, "Parameter '#{param_name}' is required" if value && param_value.nil?
         when :blank
-          raise InvalidParameterError, "Parameter cannot be blank" if !value && case param
+          raise InvalidParameterError, "Parameter '#{param_name}' cannot be blank" if !value && case param_value
           when String
-            !(/\S/ === param)
+            !(/\S/ === param_value)
           when Array, Hash
-            param.empty?
+            param_value.empty?
           else
-            param.nil?
+            param_value.nil?
           end
         when :format
-          raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
-          raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
+          raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param_value.kind_of?(String)
+          raise InvalidParameterError, "Parameter must match format #{value}" unless param_value =~ value
         when :is
-          raise InvalidParameterError, "Parameter must be #{value}" unless param === value
+          raise InvalidParameterError, "Parameter must be #{value}" unless param_value === value
         when :in, :within, :range
-          raise InvalidParameterError, "Parameter must be within #{value}" unless param.nil? || case value
+          raise InvalidParameterError, "Parameter must be within #{value}" unless param_value.nil? || case value
           when Range
-            value.include?(param)
+            value.include?(param_value)
           else
-            Array(value).include?(param)
+            Array(value).include?(param_value)
           end
         when :min
-          raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param
+          raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param_value.nil? || value <= param_value
         when :max
-          raise InvalidParameterError, "Parameter cannot be greater than #{value}" unless param.nil? || value >= param
+          raise InvalidParameterError, "Parameter cannot be greater than #{value}" unless param_value.nil? || value >= param_value
         when :min_length
-          raise InvalidParameterError, "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
+          raise InvalidParameterError, "Parameter cannot have length less than #{value}" unless param_value.nil? || value <= param_value.length
         when :max_length
-          raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
+          raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param_value.nil? || value >= param_value.length
         end
       end
     end

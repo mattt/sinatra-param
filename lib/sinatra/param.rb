@@ -95,13 +95,22 @@ module Sinatra
         return Date.parse(param) if type == Date
         return Time.parse(param) if type == Time
         return DateTime.parse(param) if type == DateTime
-        return Array(param.split(options[:delimiter] || ",")) if type == Array
-        return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
+        return coerce_array(param, options) if type == Array
+        return Hash[param.to_s.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
         return (/(false|f|no|n|0)$/i === param.to_s ? false : (/(true|t|yes|y|1)$/i === param.to_s ? true : nil)) if type == TrueClass || type == FalseClass || type == Boolean
         return nil
       rescue ArgumentError
         raise InvalidParameterError, "'#{param}' is not a valid #{type}"
       end
+    end
+
+    ###
+    # Array is a special case, we should convert from Hash
+    # or convert to string before parsing.
+    def coerce_array(param, options = {})
+      return param if param.is_a? Array
+      return param.to_a if param.is_a? Hash
+      return Array(param.to_s.split(options[:delimiter] || ","))
     end
 
     def validate!(param, options)

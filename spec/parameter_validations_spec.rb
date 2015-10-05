@@ -191,4 +191,12 @@ describe 'Parameter Validations' do
       end
     end
   end
+
+  context 'custom message ' do
+    it 'returns a custom message when configured' do
+      get('/custommessage') do |response|
+        expect(JSON.parse(response.body)['message']).to eq("'a' must be less than 10")
+      end
+    end
+  end
 end

@@ -27,7 +27,7 @@ module Sinatra
           raise exception
         end
 
-        error = exception.to_s
+        error = options[:message] || exception.to_s
 
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {name => exception.message}}.to_json

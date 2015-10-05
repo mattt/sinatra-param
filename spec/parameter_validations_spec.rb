@@ -70,6 +70,31 @@ describe 'Parameter Validations' do
         expect(response.status).to eq(400)
       end
     end
+
+    it 'returns 200 on requests when value is an array' do
+      get('/validation/format/array', arg: 'hello') do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it 'returns 200 on requests when the array is empty' do
+      get('/validation/format/array', arg: '') do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it 'returns 200 on requests when value is array and they all match' do
+      get('/validation/format/array', arg: 'hello,hello,hello') do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it 'returns 400 on requests when value is array and they do not all match' do
+      get('/validation/format/array', arg: 'hello,no,hello') do |response|
+        expect(response.status).to eq(400)
+      end
+    end
+
   end
 
   describe 'is' do

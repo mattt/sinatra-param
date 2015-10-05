@@ -119,8 +119,18 @@ module Sinatra
             param.nil?
           end
         when :format
-          raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
-          raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
+          raise InvalidParameterError, "Parameter must be a string if using the format validation" unless case param
+          when Array
+            param.all? { |c| c.kind_of?(String) }
+          else
+            param.kind_of?(String)
+          end
+          raise InvalidParameterError, "Parameter must match format #{value}" unless case param
+          when Array
+            param.all? { |c| c =~ value }
+          else
+            param =~ value
+          end
         when :is
           raise InvalidParameterError, "Parameter must be #{value}" unless param === value
         when :in, :within, :range

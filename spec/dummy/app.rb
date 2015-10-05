@@ -140,6 +140,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/format/array' do
+    param :arg, Array, format: /hello/
+    params.to_json
+  end
+
   get '/validation/format/hello' do
     param :arg, String, format: /hello/
     params.to_json

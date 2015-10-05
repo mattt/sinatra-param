@@ -31,6 +31,8 @@ module Sinatra
 
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {name => exception.message}}.to_json
+        else
+          content_type 'text/plain'
         end
 
         halt 400, error

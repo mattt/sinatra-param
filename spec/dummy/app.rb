@@ -261,4 +261,58 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/validation/hash/nested_values' do
+    param :parent, Hash do
+      param :required_child, Integer, :required => true
+      param :optional_child, String
+      param :nested_child, Hash do
+        param :required_sub_child, String, :required => true
+        param :optional_sub_child, Integer
+      end
+      param :default_child,  Boolean, :default => true
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/validation/hash/bad_nested_values' do
+    param :parent, String do
+      param :child, String
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/one_of/nested' do
+    param :parent, Hash do
+      param :a, String
+      param :b, String
+      param :c, String
+
+      one_of :a, :b, :c
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/any_of/nested' do
+    param :parent, Hash do
+      param :a, String
+      param :b, String
+      param :c, String
+
+      any_of :a, :b, :c
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
 end

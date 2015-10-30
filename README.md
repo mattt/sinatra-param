@@ -118,6 +118,20 @@ param :y, String
 any_of :x, :y
 ```
 
+## Nested Hash Validation
+
+Using block syntax, a route can validate the fields nested in a parameter of Hash type. These hashes can be nested to an arbitrary depth.
+This block will only be run if the top level validation passes and the key is present.
+
+```ruby
+param :a, Hash do
+  param :b, String
+  param :c, Hash do
+    param :d, Integer
+  end
+end
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:

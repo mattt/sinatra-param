@@ -13,24 +13,44 @@ module Sinatra
 
     def param(name, type, options = {})
       name = name.to_s
+      applicable_params = @applicable_params || params
 
-      return unless params.member?(name) or options[:default] or options[:required]
+      return unless applicable_params.member?(name) or options[:default] or options[:required]
 
       begin
-        params[name] = coerce(params[name], type, options)
-        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
-        params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
-        validate!(params[name], options)
+        applicable_params[name] = coerce(applicable_params[name], type, options)
+        applicable_params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if applicable_params[name].nil? and options[:default]
+        applicable_params[name] = options[:transform].to_proc.call(applicable_params[name]) if applicable_params[name] and options[:transform]
+        validate!(applicable_params[name], options)
+
+
+        if block_given?
+          if type != Hash
+            raise Sinatra::Param::InvalidParameterError.new(
+              'Only the Hash parameter validation can use sub hash validation method')
+          end
+          original_applicable_params = @applicable_params
+          original_parent_key_name = @parent_key_name
+          @applicable_params = applicable_params[name]
+          @parent_key_name = formatted_params(@parent_key_name, name)
+
+          yield
+
+          @applicable_params = original_applicable_params
+          @parent_key_name = original_parent_key_name
+        end
       rescue InvalidParameterError => exception
+        exception_name = formatted_params(@parent_key_name, name)
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
-          exception.param, exception.options = name, options
+          exception.param = exception_name
+          exception.options = options
           raise exception
         end
 
         error = exception.to_s
 
         if content_type and content_type.match(mime_type(:json))
-          error = {message: error, errors: {name => exception.message}}.to_json
+          error = {message: error, errors: {exception_name => exception.message}}.to_json
         end
 
         halt 400, error
@@ -40,18 +60,19 @@ module Sinatra
     def one_of(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       names = args.collect(&:to_s)
+      applicable_params = @applicable_params || params
 
       return unless names.length >= 2
 
       begin
-        validate_one_of!(params, names, options)
+        validate_one_of!(applicable_params, names, options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = names, options
           raise exception
         end
 
-        error = "Invalid parameters [#{names.join(', ')}]"
+        error = "Invalid parameters #{formatted_params(@parent_key_name, names)}"
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {names => exception.message}}.to_json
         end
@@ -63,20 +84,22 @@ module Sinatra
     def any_of(*args)
       options = args.last.is_a?(Hash) ? args.pop : {}
       names = args.collect(&:to_s)
+      applicable_params = @applicable_params || params
 
       return unless names.length >= 2
 
       begin
-        validate_any_of!(params, names, options)
+        validate_any_of!(applicable_params, names, options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = names, options
           raise exception
         end
 
-        error = "Invalid parameters [#{names.join(', ')}]"
+        formatted_params = formatted_params(@parent_key_name, names)
+        error = "Invalid parameters #{formatted_params}"
         if content_type and content_type.match(mime_type(:json))
-          error = {message: error, errors: {names => exception.message}}.to_json
+          error = {message: error, errors: {formatted_params => exception.message}}.to_json
         end
 
         halt 400, error
@@ -143,11 +166,15 @@ module Sinatra
     end
 
     def validate_one_of!(params, names, options)
-      raise InvalidParameterError, "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
+      if names.count{|name| present?(params[name])} > 1
+        raise InvalidParameterError, "Only one of #{formatted_params(@parent_key_name, names)} is allowed"
+      end
     end
 
     def validate_any_of!(params, names, options)
-      raise InvalidParameterError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
+      if names.count{|name| present?(params[name])} < 1
+        raise InvalidParameterError, "One of parameters #{formatted_params(@parent_key_name, names)} is required"
+      end
     end
 
     # ActiveSupport #present? and #blank? without patching Object
@@ -157,6 +184,14 @@ module Sinatra
 
     def blank?(object)
       object.respond_to?(:empty?) ? object.empty? : !object
+    end
+
+    def formatted_params(parent_key, name)
+      if name.is_a?(Array)
+        name = "[#{name.join(', ')}]"
+      end
+
+      return parent_key ? "#{parent_key}[#{name}]" : name
     end
   end
 

@@ -261,4 +261,13 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/embedded/parameters' do
+    param :'a[a]', String
+    param :'a[b]', Boolean, required: true
+    param :'b[a]', String, default: 'test'
+    param :'b[b]', String
+    param :'c[a]', String, transform: :upcase
+    params.to_json
+  end
 end

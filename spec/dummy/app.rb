@@ -263,6 +263,7 @@ class App < Sinatra::Base
   end
 
   get '/embedded/parameters' do
+    param :a, Hash
     param :'a[a]', String
     param :'a[b]', Boolean, required: true
     param :'b[a]', String, default: 'test'

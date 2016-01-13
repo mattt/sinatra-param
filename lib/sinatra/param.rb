@@ -6,6 +6,7 @@ require 'time'
 module Sinatra
   module Param
     Boolean = :boolean
+    EMBEEDED_HASH_MATCH = /^([^\[\]]+)\[(.+)\]$/
 
     class InvalidParameterError < StandardError
       attr_accessor :param, :options
@@ -14,13 +15,38 @@ module Sinatra
     def param(name, type, options = {})
       name = name.to_s
 
-      return unless params.member?(name) or options[:default] or options[:required]
+      if embedded_param?(name)
+        embed = embedded_param_keys(name)
+
+        param_exists = params.member?(embed[:key]) && params[embed[:key]].member?(embed[:embedded_key])
+
+        get_param = Proc.new{params[embed[:key]][embed[:embedded_key]] if params[embed[:key]]}
+        set_param = Proc.new do |value|
+          if params[embed[:key]]
+            params[embed[:key]][embed[:embedded_key]] = value
+          else
+            params[embed[:key]] = {embed[:embedded_key] => value}
+          end
+        end
+
+      else
+        param_exists = params.member?(name)
+        
+        get_param = Proc.new{params[name]}
+        set_param = Proc.new{|value| params[name] = value}
+        
+        
+      end
+
+      return unless param_exists or options[:default] or options[:required]
+
+
 
       begin
-        params[name] = coerce(params[name], type, options)
-        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
-        params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
-        validate!(params[name], options)
+        set_param.call coerce(get_param.call, type, options)
+        set_param.call((options[:default].call if options[:default].respond_to?(:call)) || options[:default]) if get_param.call.nil? and options[:default]
+        set_param.call options[:transform].to_proc.call(get_param.call) if get_param.call and options[:transform]
+        validate!(get_param.call, options)
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = name, options
@@ -158,6 +184,16 @@ module Sinatra
     def blank?(object)
       object.respond_to?(:empty?) ? object.empty? : !object
     end
+
+    def embedded_param?(name)
+      !!name.to_s.match(EMBEEDED_HASH_MATCH)
+    end
+
+    def embedded_param_keys(name)
+      match = name.to_s.match(EMBEEDED_HASH_MATCH)
+      {key: match[1], embedded_key: match[2]}
+    end
+
   end
 
   helpers Param

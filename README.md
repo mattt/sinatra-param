@@ -124,9 +124,9 @@ By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400
 
 ```json
 {
-    "message": "Invalid parameter, order",
+    "message": "Parameter must be within [\"ASC\", \"DESC\"]",
     "errors": {
-        "order": "Param must be within [\"ASC\", \"DESC\"]"
+        "order": "Parameter must be within [\"ASC\", \"DESC\"]"
     }
 }
 ```

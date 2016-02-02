@@ -126,9 +126,19 @@ module Sinatra
         when :in, :within, :range
           raise InvalidParameterError, "Parameter must be within #{value}" unless param.nil? || case value
           when Range
-            value.include?(param)
+            case param
+            when Array
+              param.all? { |element| value.include?(element) }
+            else
+              value.include?(param)
+            end
           else
-            Array(value).include?(param)
+            case param
+            when Array
+              (param - Array(value)).empty?
+            else
+              Array(value).include?(param)
+            end
           end
         when :min
           raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param

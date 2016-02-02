@@ -100,6 +100,21 @@ describe 'Parameter Validations' do
         expect(response.status).to eq(200)
       end
     end
+
+    describe 'for Arrays' do
+      it 'returns 400 on requests with any value not in the set' do
+        get('/validation/in/array', arg: 'MISC,ASC') do |response|
+          expect(response.status).to eq(400)
+          expect(JSON.parse(response.body)['message']).to eq("Parameter must be within [\"ASC\", \"DESC\"]")
+        end
+      end
+
+      it 'returns 200 on requests with all values in the set' do
+        get('/validation/in/array', arg: 'ASC,DESC') do |response|
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe 'within' do
@@ -115,6 +130,21 @@ describe 'Parameter Validations' do
         expect(response.status).to eq(200)
       end
     end
+
+    describe 'for Arrays' do
+      it 'returns 400 on requests with any value outside the range' do
+        get('/validation/within/array', arg: [20,5]) do |response|
+          expect(response.status).to eq(400)
+          expect(JSON.parse(response.body)['message']).to eq("Parameter must be within 1..10")
+        end
+      end
+
+      it 'returns 200 on requests with all values within the range' do
+        get('/validation/within/array', arg: [5,10]) do |response|
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe 'range' do
@@ -128,6 +158,21 @@ describe 'Parameter Validations' do
     it 'returns 200 on requests within the range' do
       get('/validation/range', arg: 10) do |response|
         expect(response.status).to eq(200)
+      end
+    end
+
+    describe 'for Arrays' do
+      it 'returns 400 on requests with any value outside the range' do
+        get('/validation/range/array', arg: [20,5]) do |response|
+          expect(response.status).to eq(400)
+          expect(JSON.parse(response.body)['message']).to eq("Parameter must be within 1..10")
+        end
+      end
+
+      it 'returns 200 on requests with all values within the range' do
+        get('/validation/range/array', arg: [5,10]) do |response|
+          expect(response.status).to eq(200)
+        end
       end
     end
   end

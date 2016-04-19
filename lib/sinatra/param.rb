@@ -13,28 +13,31 @@ module Sinatra
 
     def param(name, type, options = {})
       name = name.to_s
+      params = self.params # local variable with same neme as method.
+
+      # Nested params
+      scope = options[:scope]
+      params = params[scope] if scope && params[scope].is_a?(Hash)
 
       return unless params.member?(name) or options[:default] or options[:required]
 
-      begin
-        params[name] = coerce(params[name], type, options)
-        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
-        params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
-        validate!(params[name], options)
-      rescue InvalidParameterError => exception
-        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
-          exception.param, exception.options = name, options
-          raise exception
-        end
-
-        error = exception.to_s
-
-        if content_type and content_type.match(mime_type(:json))
-          error = {message: error, errors: {name => exception.message}}.to_json
-        end
-
-        halt 400, error
+      params[name] = coerce(params[name], type, options)
+      params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
+      params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
+      validate!(params[name], options)
+    rescue InvalidParameterError => exception
+      if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+        exception.param, exception.options = name, options
+        raise exception
       end
+
+      error = exception.to_s
+
+      if content_type and content_type.match(mime_type(:json))
+        error = {message: error, errors: {name => exception.message}}.to_json
+      end
+
+      halt 400, error
     end
 
     def one_of(*args)

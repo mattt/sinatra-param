@@ -175,6 +175,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/scoped/max' do
+    param :arg, Integer, scope: :q, max: 20
+    params.to_json
+  end
+
   get '/validation/min_length' do
     param :arg, String, min_length: 5
     params.to_json

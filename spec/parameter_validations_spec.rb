@@ -160,6 +160,21 @@ describe 'Parameter Validations' do
         expect(response.status).to eq(200)
       end
     end
+
+    context 'nested params' do
+      it 'returns 400 on requests with a value larger than max' do
+        get('/validation/scoped/max', q: { arg: 100 }) do |response|
+          expect(response.status).to eq(400)
+          expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be greater than 20")
+        end
+      end
+
+      it 'returns 200 on requests with a value smaller than max' do
+        get('/validation/scoped/max', q: { arg: 2 }) do |response|
+          expect(response.status).to eq(200)
+        end
+      end
+    end
   end
 
   describe 'min_length' do

@@ -149,6 +149,14 @@ param :order, String, in: ["ASC", "DESC"], raise: true
 one_of :q, :categories, raise: true
 ```
 
+## Nested Params
+
+Passing a `scope` option will provide validation for nested params, e.g. for GET parameter `q[order_id_eq]=4`:
+
+```ruby
+param :order_id_eq, Integer, scope: :q, min: 1, max: 2147483647
+```
+
 ## Contact
 
 Mattt Thompson ([@mattt](http://twitter.com/mattt))

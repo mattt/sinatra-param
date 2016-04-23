@@ -261,4 +261,16 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/all_or_none_of' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    all_or_none_of :a, :b, :c
+
+    {
+      message: 'OK'
+    }.to_json
+  end
 end

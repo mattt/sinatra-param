@@ -83,6 +83,27 @@ module Sinatra
       end
     end
 
+    def all_or_none_of(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+     begin
+        validate_all_or_none_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
+        error = "Invalid parameters [#{names.join(', ')}]"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error, errors: {names => exception.message}}.to_json
+        end
+
+        halt 400, error
+      end
+    end
+
     private
 
     def coerce(param, type, options = {})
@@ -148,6 +169,11 @@ module Sinatra
 
     def validate_any_of!(params, names, options)
       raise InvalidParameterError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
+    end
+
+    def validate_all_or_none_of!(params, names, options)
+      present_count = names.count{|name| present?(params[name])}
+      raise InvalidParameterError, "All or none of parameters [#{names.join(', ')}] are required" if present_count > 0 and present_count != names.length
     end
 
     # ActiveSupport #present? and #blank? without patching Object

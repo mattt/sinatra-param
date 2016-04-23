@@ -118,6 +118,17 @@ param :y, String
 any_of :x, :y
 ```
 
+## All Or None Of
+
+Using `all_or_none_of`, a router can specify that _all_ or _none_ of a set of parameters are required, and fail if _some_ are provided:
+
+```ruby
+param :x, String
+param :y, String
+
+all_or_none_of :x,:y
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:

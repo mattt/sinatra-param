@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe 'Parameter Validations' do
+RSpec.describe 'Parameter Validations' do
   describe 'required' do
     it 'returns 400 on requests without required fields' do
       get('/validation/required') do |response|

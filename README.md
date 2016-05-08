@@ -118,6 +118,43 @@ param :y, String
 any_of :x, :y
 ```
 
+### Errors without exception
+
+If you need to consume error with custom business logic (e.g. do not show error one by one but all errors at once). You can do this with this PR.
+
+Set flag to change slightly way how to sinatra param use "bang methods"
+
+
+```ruby
+class AppWithFlash < Sinatra::Base
+  helpers Sinatra::Param
+  
+  configure do
+    set :ruby_best_practice_sinatra_param, true
+  end
+end
+```
+
+after seting up this flag will be modified helper method "param", "one_of" and "any_of" and will be created 3 additional methods "param!", "one_of!" and "any_of!" as it's standard in Ruby community methods with bang character in the end will raise error same as for instance save vs save! in ActiveRecord.
+
+So now param helper do not raise exception and halt execution but return value if error happend otherwise just nil value represent "nothing to show".
+
+```ruby
+error_for_a = param(:a, String)
+```
+
+error_for_a will contain same error message as people are use to to get from standard Sinatra param library.
+
+as bonus we create helper method for collect or errors and remove nil values.
+
+```ruby
+errors = errors_for_params do |errors|
+  param(:a, String)
+  param(:b, String)
+  param(:c, String)
+end
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:

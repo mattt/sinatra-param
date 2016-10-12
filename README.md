@@ -77,6 +77,7 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 - `is`
 - `in`, `within`, `range`
 - `min` / `max`
+- `min_length` / `max_length`
 - `format`
 
 ### Defaults and Transformations

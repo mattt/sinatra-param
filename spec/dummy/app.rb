@@ -64,6 +64,41 @@ class App < Sinatra::Base
     param :arg, Array
     params.to_json
   end
+  
+  get '/coerce/array/string' do
+    param :arg, 'Array of String'
+    params.to_json
+  end
+  
+  get '/coerce/array/integer' do
+    param :arg, 'Array of Integer'
+    params.to_json
+  end
+  
+  get '/coerce/array/float' do
+    param :arg, 'Array of Float'
+    params.to_json
+  end
+  
+  get '/coerce/array/time' do
+    param :arg, 'Array of Time'
+    params.to_json
+  end
+  
+  get '/coerce/array/date' do
+    param :arg, 'Array of Date'
+    params.to_json
+  end
+  
+  get '/coerce/array/datetime' do
+    param :arg, 'Array of DateTime'
+    params.to_json
+  end
+  
+  get '/coerce/array/boolean' do
+    param :arg, 'Array of Boolean'
+    params.to_json
+  end
 
   get '/coerce/hash' do
     param :arg, Hash
@@ -121,6 +156,10 @@ class App < Sinatra::Base
 
   get '/validation/blank/array' do
     param :arg, Array, blank: false
+  end
+  
+  get '/validation/blank/array/integer' do
+    param :arg, "Array of Integer", blank: false
   end
 
   get '/validation/blank/hash' do

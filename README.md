@@ -41,10 +41,13 @@ class App < Sinatra::Base
 
   # GET /search?q=example
   # GET /search?q=example&categories=news
+  # GET /search?q=example&id[]=1&id[]=2
+  # GET /search?q=example&id=1,2
   # GET /search?q=example&sort=created_at&order=ASC
   get '/search' do
     param :q,           String, required: true
     param :categories,  Array
+    param :id,          "Array of Integer"
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
     param :price,       String, format: /[<\=>]\s*\$\d+/
@@ -64,7 +67,11 @@ By declaring parameter types, incoming parameters will automatically be transfor
 - `Integer`
 - `Float`
 - `Boolean` _("1/0", "true/false", "t/f", "yes/no", "y/n")_
+- `Date`
+- `Time`
+- `DateTime`
 - `Array` _("1,2,3,4,5")_
+- `'Array of <type>'` (type is one of `'String'`/`'Integer'`/`'Float'`/`'Boolean'`/`'Date'`/`'Time'`/`'DateTime`')
 - `Hash` _(key1:value1,key2:value2)_
 - `Date`, `Time`, & `DateTime`
 

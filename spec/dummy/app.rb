@@ -145,6 +145,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/has_keys' do
+    param :arg, Hash, has_keys: [:id]
+    params.to_json
+  end
+
   get '/validation/is' do
     param :arg, String, is: 'foo'
     params.to_json

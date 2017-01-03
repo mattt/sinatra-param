@@ -121,6 +121,11 @@ module Sinatra
         when :format
           raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
           raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
+        when :has_keys
+          raise InvalidParameterError, "Parameter is required" if value && param.nil?
+          raise InvalidParameterError, "Parameter must be an Array" unless value.kind_of?(Array)
+          all = value.all?{ |v| param.has_key?(v.to_s) || param.has_key?(v.to_sym) }
+          raise InvalidParameterError, "Parameter must have key(s) named #{value}" unless all
         when :is
           raise InvalidParameterError, "Parameter must be #{value}" unless param === value
         when :in, :within, :range

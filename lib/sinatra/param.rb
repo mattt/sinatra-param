@@ -18,7 +18,9 @@ module Sinatra
 
       begin
         params[name] = coerce(params[name], type, options)
-        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
+        if params[name].nil? and options[:default]
+          params[name] = (options[:default].respond_to?(:call) && options[:default].call) || options[:default]
+        end
         params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
         validate!(params[name], options)
       rescue InvalidParameterError => exception
@@ -86,22 +88,20 @@ module Sinatra
     private
 
     def coerce(param, type, options = {})
-      begin
-        return nil if param.nil?
-        return param if (param.is_a?(type) rescue false)
-        return Integer(param) if type == Integer
-        return Float(param) if type == Float
-        return String(param) if type == String
-        return Date.parse(param) if type == Date
-        return Time.parse(param) if type == Time
-        return DateTime.parse(param) if type == DateTime
+      return nil if param.nil?
+      return param if (param.is_a?(type) rescue false)
+
+      case type.to_s
+      when 'Integer'.freeze, 'Float'.freeze, 'String'.freeze then send(type.to_s, param)
+      when 'Date'.freeze, 'Time'.freeze, 'DateTime'.freeze   then type.parse(param)
+      else
         return Array(param.split(options[:delimiter] || ",")) if type == Array
         return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
         return (/(false|f|no|n|0)$/i === param.to_s ? false : (/(true|t|yes|y|1)$/i === param.to_s ? true : nil)) if type == TrueClass || type == FalseClass || type == Boolean
         return nil
-      rescue ArgumentError
-        raise InvalidParameterError, "'#{param}' is not a valid #{type}"
       end
+    rescue ArgumentError
+      raise InvalidParameterError, "'#{param}' is not a valid #{type}"
     end
 
     def validate!(param, options)

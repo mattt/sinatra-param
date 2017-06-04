@@ -261,4 +261,9 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/custommessage' do
+    param :a, Integer, within: 1..10, required: true,
+      message: "'a' must be less than 10"
+  end
 end

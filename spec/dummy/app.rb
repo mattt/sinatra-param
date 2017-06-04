@@ -297,10 +297,6 @@ class App < Sinatra::Base
     param :parent, String do
       param :child, String
     end
-
-    {
-      message: 'OK'
-    }.to_json
   end
 
   get '/one_of/nested' do
@@ -325,6 +321,18 @@ class App < Sinatra::Base
 
       any_of :a, :b, :c
     end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/all_or_none_of' do
+    param :a, String
+    param :b, String
+    param :c, String
+
+    all_or_none_of :a, :b, :c
 
     {
       message: 'OK'

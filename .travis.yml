@@ -1,2 +1,5 @@
+language: ruby
+rvm:
+    - 2.3
 before_install:
-  - gem install bundler
+    - gem install bundler

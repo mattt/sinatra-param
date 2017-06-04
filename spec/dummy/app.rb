@@ -155,13 +155,28 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/in/array' do
+    param :arg, Array, in: ['ASC', 'DESC']
+    params.to_json
+  end
+
   get '/validation/within' do
     param :arg, Integer, within: 1..10
     params.to_json
   end
 
+  get '/validation/within/array' do
+    param :arg, Array, within: 1..10, transform: ->(a) { a.map(&:to_i) }
+    params.to_json
+  end
+
   get '/validation/range' do
     param :arg, Integer, range: 1..10
+    params.to_json
+  end
+
+  get '/validation/range/array' do
+    param :arg, Array, range: 1..10, transform: ->(a) { a.map(&:to_i) }
     params.to_json
   end
 
@@ -260,5 +275,64 @@ class App < Sinatra::Base
     {
       message: 'OK'
     }.to_json
+  end
+
+  get '/validation/hash/nested_values' do
+    param :parent, Hash do
+      param :required_child, Integer, :required => true
+      param :optional_child, String
+      param :nested_child, Hash do
+        param :required_sub_child, String, :required => true
+        param :optional_sub_child, Integer
+      end
+      param :default_child,  Boolean, :default => true
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/validation/hash/bad_nested_values' do
+    param :parent, String do
+      param :child, String
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/one_of/nested' do
+    param :parent, Hash do
+      param :a, String
+      param :b, String
+      param :c, String
+
+      one_of :a, :b, :c
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/any_of/nested' do
+    param :parent, Hash do
+      param :a, String
+      param :b, String
+      param :c, String
+
+      any_of :a, :b, :c
+    end
+
+    {
+      message: 'OK'
+    }.to_json
+  end
+
+  get '/custommessage' do
+    param :a, Integer, within: 1..10, required: true,
+      message: "'a' must be less than 10"
   end
 end

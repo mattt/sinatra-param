@@ -1,5 +1,9 @@
-# sinatra-param
+# sinatra-param2
+[![Build Status](https://travis-ci.org/adrianbn/sinatra-param.svg?branch=master)](https://travis-ci.org/adrianbn/sinatra-param)
+
 _Parameter Validation & Type Coercion for Sinatra_
+
+**`sinatra-param2` is a fork of [`sinatra-param`](https://github.com/mattt/sinatra-param) that works with Sinatra 2 and has many nice additions.**
 
 REST conventions take the guesswork out of designing and consuming web APIs. Simply `GET`, `POST`, `PATCH`, or `DELETE` resource endpoints, and you get what you'd expect.
 
@@ -7,22 +11,22 @@ However, when it comes to figuring out what parameters are expected... well, all
 
 This Sinatra extension takes a first step to solving this problem on the developer side
 
-**`sinatra-param` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames) or [DataMapper](http://datamapper.org/).**
+**`sinatra-param2` allows you to declare, validate, and transform endpoint parameters as you would in frameworks like [ActiveModel](http://rubydoc.info/gems/activemodel/3.2.3/frames) or [DataMapper](http://datamapper.org/).**
 
-> Use `sinatra-param` in combination with [`Rack::PostBodyContentTypeParser` and `Rack::NestedParams`](https://github.com/rack/rack-contrib) to automatically parameterize JSON `POST` bodies and nested parameters.
+> Use `sinatra-param2` in combination with [`Rack::PostBodyContentTypeParser` and `Rack::NestedParams`](https://github.com/rack/rack-contrib) to automatically parameterize JSON `POST` bodies and nested parameters.
 
 ## Install
 
-You can install `sinatra-param` from the command line with the following:
+You can install `sinatra-param2` from the command line with the following:
 
 ```bash
-$ gem install sinatra-param
+$ gem install sinatra-param2
 ```
 
-Alternatively, you can specify `sinatra-param` as a dependency in your `Gemfile` and run `$ bundle install`:
+Alternatively, you can specify `sinatra-param2` as a dependency in your `Gemfile` and run `$ bundle install`:
 
 ```ruby
-gem "sinatra-param", require: "sinatra/param"
+gem "sinatra-param2", require: "sinatra/param"
 ```
 
 ## Example
@@ -179,8 +183,8 @@ one_of :q, :categories, raise: true
 
 ## Contact
 
-Mattt Thompson ([@mattt](http://twitter.com/mattt))
+Adrian Bravo ([@adrianbravon](http://twitter.com/adrianbravon))
 
 ## License
 
-sinatra-param is released under an MIT license. See LICENSE for more information.
+sinatra-param2 is released under an MIT license. See LICENSE for more information.

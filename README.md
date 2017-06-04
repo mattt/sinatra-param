@@ -31,6 +31,7 @@ gem "sinatra-param", require: "sinatra/param"
 require 'sinatra/base'
 require 'sinatra/param'
 require 'json'
+require 'uri'  # only needed for URI.regexp example below
 
 class App < Sinatra::Base
   helpers Sinatra::Param
@@ -48,6 +49,7 @@ class App < Sinatra::Base
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
     param :price,       String, format: /[<\=>]\s*\$\d+/
+    param :referrer     String, format: URI.regexp
 
     one_of :q, :categories
 
@@ -77,6 +79,7 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 - `is`
 - `in`, `within`, `range`
 - `min` / `max`
+- `min_length` / `max_length`
 - `format`
 
 ### Defaults and Transformations
@@ -118,15 +121,40 @@ param :y, String
 any_of :x, :y
 ```
 
+## Nested Hash Validation
+
+Using block syntax, a route can validate the fields nested in a parameter of Hash type. These hashes can be nested to an arbitrary depth.
+This block will only be run if the top level validation passes and the key is present.
+
+```ruby
+param :a, Hash do
+  param :b, String
+  param :c, Hash do
+    param :d, Integer
+  end
+end
+```
+
+## All Or None Of
+
+Using `all_or_none_of`, a router can specify that _all_ or _none_ of a set of parameters are required, and fail if _some_ are provided:
+
+```ruby
+param :x, String
+param :y, String
+
+all_or_none_of :x,:y
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:
 
 ```json
 {
-    "message": "Invalid parameter, order",
+    "message": "Parameter must be within [\"ASC\", \"DESC\"]",
     "errors": {
-        "order": "Param must be within [\"ASC\", \"DESC\"]"
+        "order": "Parameter must be within [\"ASC\", \"DESC\"]"
     }
 }
 ```

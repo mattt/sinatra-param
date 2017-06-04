@@ -175,6 +175,20 @@ describe 'Parameter Types' do
       end
     end
 
+    it 'returns the default boolean false value' do
+      get('/default/boolean/false') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['arg']).to be false
+      end
+    end
+
+    it 'returns the default boolean true value' do
+      get('/default/boolean/true') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['arg']).to be true
+      end
+    end
+
     it 'coerces truthy booleans to true when default is false' do
       %w(1 true t yes y).each do |bool|
         get('/default/boolean/false', arg: bool) do |response|

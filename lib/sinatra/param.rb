@@ -15,11 +15,11 @@ module Sinatra
       name = name.to_s
       applicable_params = @applicable_params || params
 
-      return unless applicable_params.member?(name) or options[:default] or options[:required]
+      return unless applicable_params.member?(name) or options.has_key?(:default) or options[:required]
 
       begin
         applicable_params[name] = coerce(applicable_params[name], type, options)
-        applicable_params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if applicable_params[name].nil? and options[:default]
+        applicable_params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if applicable_params[name].nil? and options.has_key?(:default)
         applicable_params[name] = options[:transform].to_proc.call(applicable_params[name]) if applicable_params[name] and options[:transform]
         validate!(applicable_params[name], options)
 
@@ -38,7 +38,7 @@ module Sinatra
           @applicable_params = original_applicable_params
           @parent_key_name = original_parent_key_name
         end
-        
+
         applicable_params[name]
       rescue InvalidParameterError => exception
         exception_name = formatted_params(@parent_key_name, name)

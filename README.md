@@ -1,5 +1,5 @@
 # sinatra-param2
-[![Build Status](https://travis-ci.org/adrianbn/sinatra-param.svg?branch=master)](https://travis-ci.org/adrianbn/sinatra-param)
+[![Build Status](https://travis-ci.org/adrianbn/sinatra-param2.svg?branch=master)](https://travis-ci.org/adrianbn/sinatra-param2)
 
 _Parameter Validation & Type Coercion for Sinatra_
 

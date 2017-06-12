@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/adrianbn/sinatra-param2"
   s.version     = Sinatra::Param::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.summary     = "Parameter Validation & Type Coercion for Sinatra."
+  s.summary     = "Parameter Validation & Type Coercion for Sinatra 2."
   s.description = "sinatra-param2 allows you to declare, validate, and transform endpoint parameters as you would in frameworks like ActiveModel or DataMapper."
 
   s.add_dependency "sinatra", "~> 2.0"

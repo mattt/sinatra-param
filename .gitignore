@@ -9,6 +9,7 @@
 /test/tmp/
 /test/version_tmp/
 /tmp/
+/build/
 
 # Documentation
 /.yardoc/
@@ -27,3 +28,6 @@ Gemfile.lock
 
 # RVM
 .rvmrc
+
+# IDEA IDE
+/.idea/

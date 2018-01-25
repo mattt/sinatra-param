@@ -21,6 +21,7 @@ module Sinatra
         params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
         params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
         validate!(params[name], options)
+        options[:after_validation].to_proc.call(params[name]) if params[name] and options[:after_validation]
       rescue InvalidParameterError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = name, options

@@ -261,4 +261,10 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/after_validation' do
+    param :a, String, after_validation: lambda { |a| params["b"] = a }
+
+    params.to_json
+  end
 end

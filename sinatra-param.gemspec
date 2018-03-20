@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = "Parameter Validation & Type Coercion for Sinatra."
   s.description = "sinatra-param allows you to declare, validate, and transform endpoint parameters as you would in frameworks like ActiveModel or DataMapper."
 
-  s.add_dependency "sinatra", "~> 1.3"
+  s.add_dependency "sinatra", ">= 1.3"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"

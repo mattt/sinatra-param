@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe 'Parameter Types' do
+RSpec.describe 'Parameter Types' do
   describe 'String' do
     it 'coerces strings' do
       get('/coerce/string', arg: '1234') do |response|

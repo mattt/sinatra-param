@@ -12,9 +12,12 @@ require 'rspec'
 require 'rack/test'
 
 require 'dummy/app'
+require 'dummy/app_with_flash'
 
 def app
   App
 end
 
-include Rack::Test::Methods
+RSpec.configure do |conf|
+  conf.include Rack::Test::Methods
+end

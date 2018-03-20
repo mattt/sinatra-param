@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe 'Parameter' do
+RSpec.describe 'Parameter' do
   it 'only sets parameters present in request or with a default value' do
     get('/', a: 'a', b: 'b') do |response|
       response_body = JSON.parse(response.body)

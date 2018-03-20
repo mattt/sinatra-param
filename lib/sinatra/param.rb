@@ -12,6 +12,136 @@ module Sinatra
     end
 
     def param(name, type, options = {})
+      if (settings.ruby_best_practice_sinatra_param rescue false)
+        param_without_exception(name, type, options)
+      else
+        param_with_exception(name, type, options)
+      end
+    end
+
+    def errors_for_params(&block)
+      errors ||= []
+      block.call(errors).compact
+    end
+
+    def param!(name, type, options = {})
+      param_with_exception(name, type, options)
+    end
+
+    def one_of(*args)
+      if (settings.ruby_best_practice_sinatra_param rescue false)
+        one_of_without_exception(*args)
+      else
+        one_of_with_exception(*args)
+      end
+    end
+
+    def one_of!(*args)
+      one_of_with_exception(*args)
+    end
+
+    def any_of(*args)
+      if (settings.ruby_best_practice_sinatra_param rescue false)
+        any_of_without_exception(*args)
+      else
+        any_of_with_exception(*args)
+      end
+    end
+
+    def any_of!(*args)
+      any_of_with_exception(*args)
+    end
+
+    private
+
+    def any_of_without_exception(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length >= 2
+
+      error = validate_any_of(params, names, options)
+      
+      error.nil? ? nil : error
+    end
+
+    def any_of_with_exception(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length >= 2
+
+      begin
+        validate_any_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
+        error = "Invalid parameters [#{names.join(', ')}]"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error, errors: {names => exception.message}}.to_json
+        end
+
+        halt 400, error
+      end
+    end
+
+    def one_of_without_exception(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length >= 2
+
+      error = validate_one_of(params, names, options)
+
+      error.nil? ? nil : error
+    end
+
+    def one_of_with_exception(*args)
+      options = args.last.is_a?(Hash) ? args.pop : {}
+      names = args.collect(&:to_s)
+
+      return unless names.length >= 2
+
+      begin
+        validate_one_of!(params, names, options)
+      rescue InvalidParameterError => exception
+        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
+          exception.param, exception.options = names, options
+          raise exception
+        end
+
+        error = "Invalid parameters [#{names.join(', ')}]"
+        if content_type and content_type.match(mime_type(:json))
+          error = {message: error, errors: {names => exception.message}}.to_json
+        end
+
+        halt 400, error
+      end
+    end
+
+    def param_without_exception(name, type, options = {})
+      name = name.to_s
+
+      return unless params.member?(name) or options[:default] or options[:required]
+
+      begin
+        params[name] = coerce(params[name], type, options)
+
+        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
+        params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
+        
+        errors = validate(params[name], options)
+      rescue InvalidParameterError => exception
+        errors = [exception.message]
+      end
+
+      errors && errors.empty? ? nil : { name => errors }
+    end
+
+    def param_with_exception(name, type, options = {})
       name = name.to_s
 
       return unless params.member?(name) or options[:default] or options[:required]
@@ -36,54 +166,6 @@ module Sinatra
         halt 400, error
       end
     end
-
-    def one_of(*args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
-      names = args.collect(&:to_s)
-
-      return unless names.length >= 2
-
-      begin
-        validate_one_of!(params, names, options)
-      rescue InvalidParameterError => exception
-        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
-          exception.param, exception.options = names, options
-          raise exception
-        end
-
-        error = "Invalid parameters [#{names.join(', ')}]"
-        if content_type and content_type.match(mime_type(:json))
-          error = {message: error, errors: {names => exception.message}}.to_json
-        end
-
-        halt 400, error
-      end
-    end
-
-    def any_of(*args)
-      options = args.last.is_a?(Hash) ? args.pop : {}
-      names = args.collect(&:to_s)
-
-      return unless names.length >= 2
-
-      begin
-        validate_any_of!(params, names, options)
-      rescue InvalidParameterError => exception
-        if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
-          exception.param, exception.options = names, options
-          raise exception
-        end
-
-        error = "Invalid parameters [#{names.join(', ')}]"
-        if content_type and content_type.match(mime_type(:json))
-          error = {message: error, errors: {names => exception.message}}.to_json
-        end
-
-        halt 400, error
-      end
-    end
-
-    private
 
     def coerce(param, type, options = {})
       begin
@@ -142,12 +224,58 @@ module Sinatra
       end
     end
 
+    def validate(param, options)
+      options.each_with_object([]) do |(key, value), errors|
+        case key
+        when :required
+          errors << "Parameter is required" if value && param.nil?
+        when :blank
+          errors << "Parameter cannot be blank" if !value && case param
+          when String
+            !(/\S/ === param)
+          when Array, Hash
+            param.empty?
+          else
+            param.nil?
+          end
+        when :format
+          errors << "Parameter must be a string if using the format validation" unless param.kind_of?(String)
+          errors << "Parameter must match format #{value}" unless param =~ value
+        when :is
+          errors << "Parameter must be #{value}" unless param === value
+        when :in, :within, :range
+          errors << "Parameter must be within #{value}" unless param.nil? || case value
+          when Range
+            value.include?(param)
+          else
+            Array(value).include?(param)
+          end
+        when :min
+          errors << "Parameter cannot be less than #{value}" unless param.nil? || value <= param
+        when :max
+          errors << "Parameter cannot be greater than #{value}" unless param.nil? || value >= param
+        when :min_length
+          errors << "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
+        when :max_length
+          errors << "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
+        end
+      end
+    end
+
     def validate_one_of!(params, names, options)
       raise InvalidParameterError, "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
     end
 
     def validate_any_of!(params, names, options)
       raise InvalidParameterError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
+    end
+
+    def validate_one_of(params, names, options)
+      return "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
+    end
+
+    def validate_any_of(params, names, options)
+      return "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
     end
 
     # ActiveSupport #present? and #blank? without patching Object

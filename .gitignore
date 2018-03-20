@@ -16,6 +16,8 @@
 /doc/
 /rdoc/
 
+.byebug_history
+
 # Environment
 /.bundle/
 /lib/bundler/man/

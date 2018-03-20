@@ -4,15 +4,15 @@ require File.expand_path('../lib/sinatra/param/version', __FILE__)
 Gem::Specification.new do |s|
   s.name        = "sinatra-param"
   s.license     = "MIT"
-  s.authors     = ["Mattt Thompson"]
-  s.email       = "m@mattt.me"
+  s.authors     = ["Mattt"]
+  s.email       = "mattt@me.com"
   s.homepage    = "https://github.com/mattt/sinatra-param"
   s.version     = Sinatra::Param::VERSION
   s.platform    = Gem::Platform::RUBY
   s.summary     = "Parameter Validation & Type Coercion for Sinatra."
   s.description = "sinatra-param allows you to declare, validate, and transform endpoint parameters as you would in frameworks like ActiveModel or DataMapper."
 
-  s.add_dependency "sinatra", "~> 1.3"
+  s.add_dependency "sinatra", ">= 1.3"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"

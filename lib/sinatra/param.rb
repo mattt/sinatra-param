@@ -14,11 +14,11 @@ module Sinatra
     def param(name, type, options = {})
       name = name.to_s
 
-      return unless params.member?(name) or options[:default] or options[:required]
+      return unless params.member?(name) or !options[:default].nil? or options[:required]
 
       begin
         params[name] = coerce(params[name], type, options)
-        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and options[:default]
+        params[name] = (options[:default].call if options[:default].respond_to?(:call)) || options[:default] if params[name].nil? and !options[:default].nil?
         params[name] = options[:transform].to_proc.call(params[name]) if params[name] and options[:transform]
         validate!(params[name], options)
       rescue InvalidParameterError => exception

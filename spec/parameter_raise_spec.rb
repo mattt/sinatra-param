@@ -5,7 +5,7 @@ describe 'Exception' do
     it 'should raise error when option is specified' do
       expect {
         get('/raise/validation/required')
-      }.to raise_error
+      }.to raise_error Sinatra::Param::InvalidParameterError
     end
   end
 
@@ -13,13 +13,13 @@ describe 'Exception' do
     params = {a: 1, b: 2, c: 3}
     expect {
       get('/raise/one_of/3', params)
-    }.to raise_error
+    }.to raise_error Sinatra::Param::InvalidParameterError
   end
 
   it 'should raise error when no parameters are specified' do
     params = {}
     expect {
       get('/raise/any_of', params)
-    }.to raise_error
+    }.to raise_error Sinatra::Param::InvalidParameterError
   end
 end

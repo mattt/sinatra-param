@@ -1,4 +1,5 @@
 # sinatra-param
+
 _Parameter Validation & Type Coercion for Sinatra_
 
 REST conventions take the guesswork out of designing and consuming web APIs. Simply `GET`, `POST`, `PATCH`, or `DELETE` resource endpoints, and you get what you'd expect.
@@ -27,7 +28,7 @@ gem "sinatra-param", require: "sinatra/param"
 
 ## Example
 
-``` ruby
+```ruby
 require 'sinatra/base'
 require 'sinatra/param'
 require 'json'
@@ -60,29 +61,30 @@ end
 
 By declaring parameter types, incoming parameters will automatically be transformed into an object of that type. For instance, if a param is `Boolean`, values of `'1'`, `'true'`, `'t'`, `'yes'`, and `'y'` will be automatically transformed into `true`.
 
-- `String`
-- `Integer`
-- `Float`
-- `Boolean` _("1/0", "true/false", "t/f", "yes/no", "y/n")_
-- `Array` _("1,2,3,4,5")_
-- `Hash` _(key1:value1,key2:value2)_
-- `Date`, `Time`, & `DateTime`
+* `String`
+* `Integer`
+* `Float`
+* `Boolean` _("1/0", "true/false", "t/f", "yes/no", "y/n")_
+* `Array` _("1,2,3,4,5")_
+* `Hash` _(key1:value1,key2:value2)_
+* `Date`, `Time`, & `DateTime`
 
 ### Validations
 
 Encapsulate business logic in a consistent way with validations. If a parameter does not satisfy a particular condition, a `400` error is returned with a message explaining the failure.
 
-- `required`
-- `blank`
-- `is`
-- `in`, `within`, `range`
-- `min` / `max`
-- `min_length` / `max_length`
-- `format`
+
+* `required`
+* `blank`
+* `is`
+* `in`, `within`, `range`
+* `min` / `max`
+* `min_length` / `max_length`
+* `format`
 
 ### Defaults and Transformations
 
-Passing a `default` option will provide a default value for a parameter if none is passed.  A `default` can defined as either a default or as a `Proc`:
+Passing a `default` option will provide a default value for a parameter if none is passed. A `default` can defined as either a default or as a `Proc`:
 
 ```ruby
 param :attribution, String, default: "©"
@@ -125,10 +127,10 @@ By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400
 
 ```json
 {
-    "message": "Invalid parameter, order",
-    "errors": {
-        "order": "Param must be within [\"ASC\", \"DESC\"]"
-    }
+  "message": "Invalid parameter, order",
+  "errors": {
+    "order": "Param must be within [\"ASC\", \"DESC\"]"
+  }
 }
 ```
 
@@ -152,7 +154,7 @@ one_of :q, :categories, raise: true
 
 ## Contact
 
-Mattt Thompson ([@mattt](http://twitter.com/mattt))
+Mattt ([@mattt](http://twitter.com/mattt))
 
 ## License
 

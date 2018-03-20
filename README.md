@@ -137,9 +137,9 @@ By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400
 
 ```json
 {
-  "message": "Invalid parameter, order",
+  "message": "Parameter must be within [\"ASC\", \"DESC\"]",
   "errors": {
-    "order": "Param must be within [\"ASC\", \"DESC\"]"
+    "order": "Parameter must be within [\"ASC\", \"DESC\"]"
   }
 }
 ```
@@ -150,7 +150,7 @@ To change this, you can set `:raise_sinatra_param_exceptions` to `true`, and int
 set :raise_sinatra_param_exceptions, true
 
 error Sinatra::Param::InvalidParameterError do
-    {error: "#{env['sinatra.error'].param} is invalid"}.to_json
+    { error: "#{env['sinatra.error'].param} is invalid" }.to_json
 end
 ```
 

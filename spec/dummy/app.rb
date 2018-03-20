@@ -261,4 +261,9 @@ class App < Sinatra::Base
       message: 'OK'
     }.to_json
   end
+
+  get '/xml' do
+    content_type :xml
+    param :a, Integer, within: 1..10, required: true
+  end
 end

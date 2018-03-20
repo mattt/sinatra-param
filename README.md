@@ -32,6 +32,7 @@ gem "sinatra-param", require: "sinatra/param"
 require 'sinatra/base'
 require 'sinatra/param'
 require 'json'
+require 'uri'  # only needed for URI.regexp example below
 
 class App < Sinatra::Base
   helpers Sinatra::Param
@@ -49,6 +50,7 @@ class App < Sinatra::Base
     param :sort,        String, default: "title"
     param :order,       String, in: ["ASC", "DESC"], transform: :upcase, default: "ASC"
     param :price,       String, format: /[<\=>]\s*\$\d+/
+    param :referrer     String, format: URI.regexp
 
     one_of :q, :categories
 

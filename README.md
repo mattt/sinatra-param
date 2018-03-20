@@ -73,7 +73,6 @@ By declaring parameter types, incoming parameters will automatically be transfor
 
 Encapsulate business logic in a consistent way with validations. If a parameter does not satisfy a particular condition, a `400` error is returned with a message explaining the failure.
 
-
 * `required`
 * `blank`
 * `is`
@@ -81,6 +80,17 @@ Encapsulate business logic in a consistent way with validations. If a parameter 
 * `min` / `max`
 * `min_length` / `max_length`
 * `format`
+
+### Custom Error Messages
+
+Passing a `message` option allows you to customize the message
+for any validation error that occurs.
+
+```ruby
+param :spelling,
+      format: /\b(?![a-z]*cie)[a-z]*(?:cei|ie)[a-z]*/i,
+      message: "'i' before 'e', except after 'c'"
+```
 
 ### Defaults and Transformations
 

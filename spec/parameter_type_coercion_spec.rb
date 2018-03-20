@@ -168,5 +168,21 @@ describe 'Parameter Types' do
         end
       end
     end
+
+    it 'coerces default booleans to true when default is true and its not provided' do
+      get('/default/boolean/true') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['arg']).to be true
+        expect(JSON.parse(response.body)['arg']).to_not be_nil
+      end
+    end
+
+    it 'coerces default booleans to false when default is false and its not provided' do
+      get('/default/boolean/false') do |response|
+        expect(response.status).to eql 200
+        expect(JSON.parse(response.body)['arg']).to be false
+        expect(JSON.parse(response.body)['arg']).to_not be_nil
+      end
+    end
   end
 end

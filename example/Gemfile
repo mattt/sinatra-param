@@ -1,7 +1,7 @@
-ruby '2.0.0'
+ruby '2.4.1'
 source "https://rubygems.org"
 
-gem 'sinatra', require: 'sinatra/base'
+gem 'json', '~> 2.1.0'
+gem 'sinatra', '~> 2.0.1', require: 'sinatra/base'
 gem 'sinatra-param', path: File.join(__FILE__, "../.."), require: 'sinatra/param'
-gem 'json'
-gem 'unicorn'
+gem 'unicorn', '~> 5.4.0'

@@ -119,6 +119,14 @@ param :y, String
 any_of :x, :y
 ```
 
+### after validation
+
+You can pass a ruby code block to `after_validation` option, it'll called after all validations passed. And In you head please know that this is a dangerous option, it'll cause some curious bugs if you modify the url params or do something else like this.
+
+```ruby
+param :order, String, in: ["ASC", "DESC"], after_validation: lambda { |order| puts "all validations of params[order] are passed" }
+```
+
 ### Exceptions
 
 By default, when a parameter precondition fails, `Sinatra::Param` will `halt 400` with an error message:
@@ -149,6 +157,8 @@ param :order, String, in: ["ASC", "DESC"], raise: true
 
 one_of :q, :categories, raise: true
 ```
+
+
 
 ## Contact
 

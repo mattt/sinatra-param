@@ -117,6 +117,15 @@ describe 'Parameter Types' do
         expect(parsed_body['arg']).to eq(%w(1 2 3 4 5))
       end
     end
+
+    it 'coerces arrays when hash is given' do
+      get('/coerce/array', arg: { foo: 'bar', chunky: 'bacon' } ) do |response|
+        expect(response.status).to eql 200
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['arg']).to be_an(Array)
+        expect(parsed_body['arg']).to eq([['foo', 'bar'], ['chunky', 'bacon']])
+      end
+    end
   end
 
   describe 'Hash' do
@@ -126,6 +135,22 @@ describe 'Parameter Types' do
         parsed_body = JSON.parse(response.body)
         expect(parsed_body['arg']).to be_an(Hash)
         expect(parsed_body['arg']).to eq({ 'a' => 'b', 'c' => 'd'})
+      end
+    end
+
+    it 'coerces hash when non valid arg is given' do
+      invalid_args = [
+        'not a hash',
+        ['1', '2', '3'],
+        999.99
+      ]
+
+      invalid_args.each do |arg|
+        get('/coerce/hash', arg: arg) do |response|
+          expect(response.status).to eql 200
+          parsed_body = JSON.parse(response.body)
+          expect(parsed_body['arg']).to be_an(Hash)
+        end
       end
     end
   end

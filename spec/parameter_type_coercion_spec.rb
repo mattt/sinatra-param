@@ -24,6 +24,20 @@ describe 'Parameter Types' do
         expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Integer")
       end
     end
+
+    it 'returns 400 on requests when a hash is supplied instead of a number' do
+      get('/coerce/integer', arg: { 'a' => 'b' }) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('{"a"=>"b"}' is not a valid Integer))
+      end
+    end
+
+    it 'returns 400 on requests when an array is supplied instead of a number' do
+      get('/coerce/integer', arg: ['1','2','3','4','5']) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('["1", "2", "3", "4", "5"]' is not a valid Integer))
+      end
+    end
   end
 
   describe 'Float' do
@@ -38,6 +52,20 @@ describe 'Parameter Types' do
       get('/coerce/float', arg: '123abc') do |response|
         expect(response.status).to eql 400
         expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Float")
+      end
+    end
+
+    it 'returns 400 on requests when a hash is supplied instead of a number' do
+      get('/coerce/float', arg: { 'a' => 'b' }) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('{"a"=>"b"}' is not a valid Float))
+      end
+    end
+
+    it 'returns 400 on requests when an array is supplied instead of a number' do
+      get('/coerce/float', arg: ['1','2','3','4','5']) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('["1", "2", "3", "4", "5"]' is not a valid Float))
       end
     end
   end
@@ -117,6 +145,13 @@ describe 'Parameter Types' do
         expect(parsed_body['arg']).to eq(%w(1 2 3 4 5))
       end
     end
+
+    it 'returns 400 on requests when a hash is supplied instead of an array' do
+      get('/coerce/array', arg: { 'a' => 'b' }) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('{"a"=>"b"}' is not a valid Array))
+      end
+    end
   end
 
   describe 'Hash' do
@@ -125,7 +160,14 @@ describe 'Parameter Types' do
         expect(response.status).to eql 200
         parsed_body = JSON.parse(response.body)
         expect(parsed_body['arg']).to be_an(Hash)
-        expect(parsed_body['arg']).to eq({ 'a' => 'b', 'c' => 'd'})
+        expect(parsed_body['arg']).to eq({ 'a' => 'b', 'c' => 'd' })
+      end
+    end
+
+    it 'returns 400 on requests when an array is supplied instead of a hash' do
+      get('/coerce/hash', arg: [1, 2, 3]) do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq(%q('["1", "2", "3"]' is not a valid Hash))
       end
     end
   end

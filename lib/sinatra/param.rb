@@ -92,6 +92,9 @@ module Sinatra
       begin
         return nil if param.nil?
         return param if (param.is_a?(type) rescue false)
+        if (param.is_a?(Array) && type != Array) || (param.is_a?(Hash) && type != Hash)
+          raise InvalidParameterError, "'#{param}' is not a valid #{type}"
+        end
         return Integer(param) if type == Integer
         return Float(param) if type == Float
         return String(param) if type == String

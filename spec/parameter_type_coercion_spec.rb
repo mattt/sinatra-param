@@ -184,5 +184,19 @@ describe 'Parameter Types' do
         expect(JSON.parse(response.body)['arg']).to_not be_nil
       end
     end
+
+    it 'returns 400 on requests when true is not a truthy value' do
+      get('/default/boolean/true', arg: 'abc') do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq("'abc' is not a valid boolean")
+      end
+    end
+
+    it 'returns 400 on requests when false is not a falsey value' do
+      get('/default/boolean/false', arg: 'abc') do |response|
+        expect(response.status).to eql 400
+        expect(JSON.parse(response.body)['message']).to eq("'abc' is not a valid boolean")
+      end
+    end
   end
 end

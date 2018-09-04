@@ -95,8 +95,21 @@ describe 'Parameter Validations' do
       end
     end
 
+    it 'returns 400 on requests with array value is not subset of the set' do
+      get('/validation/array/in', arg: 'ASC,MISC') do |response|
+        expect(response.status).to eq(400)
+        expect(JSON.parse(response.body)['message']).to eq("Parameter must be within [\"ASC\", \"DESC\"]")
+      end
+    end
+
     it 'returns 200 on requests with a value in the set' do
       get('/validation/in', arg: 'ASC') do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it 'returns 200 on requests with array value is subset of the set' do
+      get('/validation/array/in', arg: 'ASC,DESC') do |response|
         expect(response.status).to eq(200)
       end
     end
@@ -125,8 +138,21 @@ describe 'Parameter Validations' do
       end
     end
 
+    it 'returns 400 on requests with array value outside the range' do
+      get('/validation/array/range', arg: '1,7,9,11') do |response|
+        expect(response.status).to eq(400)
+        expect(JSON.parse(response.body)['message']).to eq("Parameter must be within 1..10")
+      end
+    end
+
     it 'returns 200 on requests within the range' do
       get('/validation/range', arg: 10) do |response|
+        expect(response.status).to eq(200)
+      end
+    end
+
+    it 'returns 200 on requests within the range' do
+      get('/validation/array/range', arg: '1,7,9') do |response|
         expect(response.status).to eq(200)
       end
     end

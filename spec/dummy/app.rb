@@ -155,6 +155,11 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  get '/validation/array/in' do
+    param :arg, Array, in: ['ASC', 'DESC']
+    params.to_json
+  end
+
   get '/validation/within' do
     param :arg, Integer, within: 1..10
     params.to_json
@@ -162,6 +167,11 @@ class App < Sinatra::Base
 
   get '/validation/range' do
     param :arg, Integer, range: 1..10
+    params.to_json
+  end
+
+  get '/validation/array/range' do
+    param :arg, Array, range: 1..10
     params.to_json
   end
 

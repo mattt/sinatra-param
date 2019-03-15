@@ -92,7 +92,7 @@ module Sinatra
       begin
         return nil if param.nil?
         return param if (param.is_a?(type) rescue false)
-        return Integer(param) if type == Integer
+        return Integer(param, 10) if type == Integer
         return Float(param) if type == Float
         return String(param) if type == String
         return Date.parse(param) if type == Date

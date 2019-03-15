@@ -51,9 +51,9 @@ describe 'Parameter Types' do
     end
 
     it 'returns 400 on requests when time is invalid' do
-      get('/coerce/time', arg: '123abc') do |response|
+      get('/coerce/time', arg: 'noon') do |response|
         expect(response.status).to eql 400
-        expect(JSON.parse(response.body)['message']).to eq("'123abc' is not a valid Time")
+        expect(JSON.parse(response.body)['message']).to eq("'noon' is not a valid Time")
       end
     end
   end

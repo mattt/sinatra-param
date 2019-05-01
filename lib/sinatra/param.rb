@@ -10,6 +10,19 @@ module Sinatra
     class InvalidParameterError < StandardError
       attr_accessor :param, :options
     end
+    class ParameterCoercionError < InvalidParameterError ; end
+    class ParameterMissingError < InvalidParameterError ; end
+    class ParameterBlankError < InvalidParameterError ; end
+    class ParameterNotStringError < InvalidParameterError ; end
+    class ParameterFormatError < InvalidParameterError ; end
+    class ParameterEqualityError < InvalidParameterError ; end
+    class ParameterOutOfRangeError < InvalidParameterError ; end
+    class ParameterTooSmallError < InvalidParameterError ; end
+    class ParameterTooLargeError < InvalidParameterError ; end
+    class ParameterTooShortError < InvalidParameterError ; end
+    class ParameterTooLongError < InvalidParameterError ; end
+    class ParameterOneOfError < InvalidParameterError ; end
+    class ParameterAnyOfError < InvalidParameterError ; end
 
     def param(name, type, options = {})
       name = name.to_s
@@ -48,7 +61,7 @@ module Sinatra
 
       begin
         validate_one_of!(params, names, options)
-      rescue InvalidParameterError => exception
+      rescue ParameterOneOfError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = names, options
           raise exception
@@ -71,7 +84,7 @@ module Sinatra
 
       begin
         validate_any_of!(params, names, options)
-      rescue InvalidParameterError => exception
+      rescue ParameterAnyOfError => exception
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = names, options
           raise exception
@@ -128,7 +141,7 @@ module Sinatra
         end
         return nil
       rescue ArgumentError
-        raise InvalidParameterError, "'#{param}' is not a valid #{type}"
+        raise ParameterCoercionError, "'#{param}' is not a valid #{type}"
       end
     end
 
@@ -136,9 +149,9 @@ module Sinatra
       options.each do |key, value|
         case key
         when :required
-          raise InvalidParameterError, "Parameter is required" if value && param.nil?
+          raise ParameterMissingError, "Parameter is required" if value && param.nil?
         when :blank
-          raise InvalidParameterError, "Parameter cannot be blank" if !value && case param
+          raise ParameterBlankError, "Parameter cannot be blank" if !value && case param
           when String
             !(/\S/ === param)
           when Array, Hash
@@ -147,35 +160,35 @@ module Sinatra
             param.nil?
           end
         when :format
-          raise InvalidParameterError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
-          raise InvalidParameterError, "Parameter must match format #{value}" unless param =~ value
+          raise ParameterNotStringError, "Parameter must be a string if using the format validation" unless param.kind_of?(String)
+          raise ParameterFormatError, "Parameter must match format #{value}" unless param =~ value
         when :is
-          raise InvalidParameterError, "Parameter must be #{value}" unless param === value
+          raise ParameterEqualityError, "Parameter must be #{value}" unless param === value
         when :in, :within, :range
-          raise InvalidParameterError, "Parameter must be within #{value}" unless param.nil? || case value
+          raise ParameterOutOfRangeError, "Parameter must be within #{value}" unless param.nil? || case value
           when Range
             value.include?(param)
           else
             Array(value).include?(param)
           end
         when :min
-          raise InvalidParameterError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param
+          raise ParameterTooSmallError, "Parameter cannot be less than #{value}" unless param.nil? || value <= param
         when :max
-          raise InvalidParameterError, "Parameter cannot be greater than #{value}" unless param.nil? || value >= param
+          raise ParameterTooLargeError, "Parameter cannot be greater than #{value}" unless param.nil? || value >= param
         when :min_length
-          raise InvalidParameterError, "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
+          raise ParameterTooShortError, "Parameter cannot have length less than #{value}" unless param.nil? || value <= param.length
         when :max_length
-          raise InvalidParameterError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
+          raise ParameterTooLongError, "Parameter cannot have length greater than #{value}" unless param.nil? || value >= param.length
         end
       end
     end
 
     def validate_one_of!(params, names, options)
-      raise InvalidParameterError, "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
+      raise ParameterOneOfError, "Only one of [#{names.join(', ')}] is allowed" if names.count{|name| present?(params[name])} > 1
     end
 
     def validate_any_of!(params, names, options)
-      raise InvalidParameterError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
+      raise ParameterAnyOfError, "One of parameters [#{names.join(', ')}] is required" if names.count{|name| present?(params[name])} < 1
     end
 
     def validate_all_or_none_of!(params, names, options)

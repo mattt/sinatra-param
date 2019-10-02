@@ -23,12 +23,12 @@ module Sinatra
         validate!(params[name], options)
         params[name]
       rescue InvalidParameterError => exception
+        error = options[:message] || exception.to_s
+
         if options[:raise] or (settings.raise_sinatra_param_exceptions rescue false)
           exception.param, exception.options = name, options
-          raise exception
+          raise exception, error
         end
-
-        error = options[:message] || exception.to_s
 
         if content_type and content_type.match(mime_type(:json))
           error = {message: error, errors: {name => exception.message}}.to_json

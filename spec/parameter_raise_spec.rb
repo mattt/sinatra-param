@@ -22,4 +22,12 @@ describe 'Exception' do
       get('/raise/any_of', params)
     }.to raise_error Sinatra::Param::InvalidParameterError
   end
+
+  context 'custom message ' do
+    it 'returns a custom message in the raised error when configured' do
+      expect {
+        get('/raise/custommessage')
+      }.to raise_error Sinatra::Param::InvalidParameterError, /'a' must be less than 10/
+    end
+  end
 end

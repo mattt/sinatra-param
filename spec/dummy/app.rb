@@ -271,6 +271,10 @@ class App < Sinatra::Base
     param :a, Integer, within: 1..10, required: true, message: "'a' must be less than 10"
   end
 
+  get '/raise/custommessage' do
+    param :a, Integer, within: 1..10, required: true, message: "'a' must be less than 10", raise: true
+  end
+
   get '/all_or_none_of' do
     param :a, String
     param :b, String

@@ -5,7 +5,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests without required fields' do
       get('/validation/required') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter is required")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' is required")
       end
     end
 
@@ -20,28 +20,28 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests when string is blank' do
       get('/validation/blank/string', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when array is blank' do
       get('/validation/blank/array', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when hash is blank' do
       get('/validation/blank/hash', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
     it 'returns 400 on requests when hash is blank' do
       get('/validation/blank/other', arg: '') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be blank")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be blank")
       end
     end
 
@@ -76,7 +76,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests when value is other than defined' do
       get('/validation/is', arg: 'bar') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter must be foo")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' must be foo")
       end
     end
 
@@ -91,7 +91,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a value not in the set' do
       get('/validation/in', arg: 'MISC') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter must be within [\"ASC\", \"DESC\"]")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' must be within [\"ASC\", \"DESC\"]")
       end
     end
 
@@ -106,7 +106,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a value outside the range' do
       get('/validation/within', arg: 20) do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter must be within 1..10")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' must be within 1..10")
       end
     end
 
@@ -121,7 +121,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a value outside the range' do
       get('/validation/range', arg: 20) do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter must be within 1..10")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' must be within 1..10")
       end
     end
 
@@ -136,7 +136,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a value smaller than min' do
       get('/validation/min', arg: 5) do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be less than 12")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be less than 12")
       end
     end
 
@@ -151,7 +151,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a value larger than max' do
       get('/validation/max', arg: 100) do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot be greater than 20")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot be greater than 20")
       end
     end
 
@@ -166,7 +166,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a string shorter than min_length' do
       get('/validation/min_length', arg: 'hi') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot have length less than 5")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot have length less than 5")
       end
     end
 
@@ -181,7 +181,7 @@ describe 'Parameter Validations' do
     it 'returns 400 on requests with a string longer than max_length' do
       get('/validation/max_length', arg: 'reallylongstringlongerthanmax') do |response|
         expect(response.status).to eq(400)
-        expect(JSON.parse(response.body)['message']).to eq("Parameter cannot have length greater than 10")
+        expect(JSON.parse(response.body)['message']).to eq("Parameter 'arg' cannot have length greater than 10")
       end
     end
 

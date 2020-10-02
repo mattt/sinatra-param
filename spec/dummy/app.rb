@@ -70,6 +70,21 @@ class App < Sinatra::Base
     params.to_json
   end
 
+  put '/coerce/file' do
+    param :arg, File
+    {
+      arg: {
+        body: params[:arg].read,
+        content_type: params[:arg].content_type,
+        filename: params[:arg].filename,
+        head: params[:arg].head,
+        name: params[:arg].name,
+        original_filename: params[:arg].original_filename,
+        type: params[:arg].type,
+      },
+    }.to_json
+  end
+
   get '/coerce/boolean' do
     param :arg, Boolean
     params.to_json

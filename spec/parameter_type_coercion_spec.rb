@@ -130,6 +130,47 @@ describe 'Parameter Types' do
     end
   end
 
+  describe 'File' do
+    let(:arg) { Rack::Test::UploadedFile.new(content, 'text/csv', original_filename: 'file.csv') }
+    let(:content) { StringIO.new('content') }
+    let(:head) do
+      <<~HEAD
+        Content-Disposition: form-data; name="arg"; filename="file.csv"\r
+        Content-Type: text/csv\r
+        Content-Length: 7\r
+      HEAD
+    end
+
+    it 'coerces files' do
+      put('/coerce/file', arg: arg) do |response|
+        expect(response.status).to eql 200
+        parsed_body = JSON.parse(response.body)
+        expect(parsed_body['arg']).to be_a(Hash)
+        expect(parsed_body['arg']).to eq({
+          'body' => 'content',
+          'content_type' => 'text/csv',
+          'filename' => 'file.csv',
+          'head' => head,
+          'name' => 'arg',
+          'original_filename' => 'file.csv',
+          'type' => 'text/csv',
+        })
+      end
+    end
+
+    it 'returns 400 when not a hash' do
+      put('/coerce/file', arg: 'arg') do |response|
+        expect(response.status).to eql 400
+      end
+    end
+
+    it 'returns 400 when not a file upload hash' do
+      put('/coerce/file', arg: { 'a' => 'a' }) do |response|
+        expect(response.status).to eql 400
+      end
+    end
+  end
+
   describe 'Boolean' do
     it 'coerces truthy booleans to true' do
       %w(1 true t yes y).each do |bool|

@@ -68,6 +68,7 @@ By declaring parameter types, incoming parameters will automatically be transfor
 * `Array` _("1,2,3,4,5")_
 * `Hash` _(key1:value1,key2:value2)_
 * `Date`, `Time`, & `DateTime`
+* `File`
 
 ### Validations
 

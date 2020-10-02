@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require 'sinatra/param/uploaded_file'
 require 'sinatra/param/version'
 require 'date'
 require 'time'
@@ -121,6 +122,7 @@ module Sinatra
         return DateTime.parse(param) if type == DateTime
         return Array(param.split(options[:delimiter] || ",")) if type == Array
         return Hash[param.split(options[:delimiter] || ",").map{|c| c.split(options[:separator] || ":")}] if type == Hash
+        return UploadedFile.from_param(param) if type == File
         if [TrueClass, FalseClass, Boolean].include? type
           coerced = /^(false|f|no|n|0)$/i === param.to_s ? false : /^(true|t|yes|y|1)$/i === param.to_s ? true : nil
           raise ArgumentError if coerced.nil?
